@@ -2,7 +2,6 @@ package game;
 
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
-import utilz.Constants;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static utilz.Constants.Directions.*;
 import static utilz.Constants.PlayerConstants.*;
 
 public class GamePanel extends JPanel {
@@ -20,8 +20,10 @@ public class GamePanel extends JPanel {
     private BufferedImage[][] animations;
     private int animationTick, animationIndex, animationSpeed = 20;
     private int playerAction = IDLE;
+    private boolean isMoving = false;
 
     private float xDelta = 100, yDelta = 100;
+    private int playerDir = -1;
 
     public GamePanel() {
         mouseInputs = new MouseInputs(this);
@@ -54,37 +56,51 @@ public class GamePanel extends JPanel {
         }
     }
 
+    private void setAnimation() {
+        if(isMoving) playerAction = RUNNING;
+        else playerAction = IDLE;
+    }
+
     //Window
     private void setPanelSize() {
         setPreferredSize(new Dimension(1280, 800));
     }
 
     //Movement
-    public void changeXDelta(int value) {
-        this.xDelta+=value;
+    public void setDirection(int direction) {
+        this.playerDir = direction;
+        isMoving = true;
     }
 
-    public void changeYDelta(int value) {
-        this.yDelta+=value;
+    public void setMoving(boolean moving) {
+        isMoving = moving;
     }
 
-    public void setRectPosition(int x, int y) {
-        this.xDelta = x;
-        this.yDelta = y;
+    public void updatePosition() {
+        if(isMoving) {
+            switch (playerDir) {
+                case LEFT -> xDelta-=5;
+                case UP -> yDelta-=5;
+                case RIGHT -> xDelta+=5;
+                case DOWN -> yDelta+=5;
+            }
+        }
     }
+
     public void paint(Graphics g) {
         super.paintComponent(g);
 
         updateAnimationTick();
 
-
-        g.drawImage(animations[playerAction][animationIndex], (int) xDelta, (int) yDelta, 128, 80,null);
+        setAnimation();
+        updatePosition();
+        g.drawImage(animations[playerAction][animationIndex],
+                (int) xDelta, (int) yDelta, 256, 160,null);
     }
-
     private void updateAnimationTick() {
         if(++animationTick >= animationSpeed) {
             animationTick = 0;
-            if(++animationIndex >= 6) {
+            if(++animationIndex >= GetSpriteAmount(playerAction)) {
                 animationIndex = 0;
             }
         }
