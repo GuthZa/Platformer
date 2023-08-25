@@ -15,6 +15,7 @@ public class Player extends Entity {
     private int animationTick, animationIndex, animationSpeed = 20;
     private int playerAction = IDLE;
     private boolean isMoving = false;
+    private boolean isAttacking = false;
     private boolean left, up, right, down;
     private float playerSpeed = 2.0f;
 
@@ -58,6 +59,10 @@ public class Player extends Entity {
         }
     }
 
+    public void setAttacking(boolean attacking) {
+        isAttacking = attacking;
+    }
+
     public boolean isLeft() {
         return left;
     }
@@ -89,11 +94,18 @@ public class Player extends Entity {
     public void setDown(boolean down) {
         this.down = down;
     }
-    //Animations and Images
 
+
+    //Animations and Images
     private void setAnimation() {
+        int startAnimation = playerAction;
+
         if(isMoving) playerAction = RUNNING;
         else playerAction = IDLE;
+
+        if(isAttacking) playerAction = ATTACK_1;
+
+        if (startAnimation != playerAction) resetAnimationTicks();
     }
 
     private void updateAnimationTick() {
@@ -101,8 +113,14 @@ public class Player extends Entity {
             animationTick = 0;
             if(++animationIndex >= GetSpriteAmount(playerAction)) {
                 animationIndex = 0;
+                isAttacking = false;
             }
         }
+    }
+
+    public void resetAnimationTicks() {
+        animationTick = 0;
+        animationIndex = 0;
     }
 
     private void loadAnimations() {
@@ -122,7 +140,12 @@ public class Player extends Entity {
             System.out.println("Error loading player image at: ");
             e.printStackTrace();
         }
+    }
 
-
+    public void resetDirBooleans() {
+        left = false;
+        up = false;
+        right = false;
+        down = false;
     }
 }
