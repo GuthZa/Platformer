@@ -1,6 +1,5 @@
 package game;
 
-import game.GamePanel;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
