@@ -19,20 +19,20 @@ public class Player extends Entity {
 
 
 
-    public Player(float x, float y) {
-        super(x, y);
+    public Player(float x, float y, int width, int height) {
+        super(x, y, width, height);
         loadAnimations();
     }
 
     public void update() {
+        updatePosition();
         updateAnimationTick();
         setAnimation();
-        updatePosition();
     }
 
     public void render(Graphics g) {
         g.drawImage(animations[playerAction][animationIndex],
-                (int) x, (int) y, 256, 160,null);
+                (int) x, (int) y, width, height,null);
     }
 
     //Movement
