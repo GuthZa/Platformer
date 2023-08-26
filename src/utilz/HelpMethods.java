@@ -3,7 +3,7 @@ package utilz;
 import game.Game;
 
 public class HelpMethods {
-    public static boolean CanMoveHere(float x, float y, int width, int height, int[][] levelData) {
+    public static boolean CanMoveHere(float x, float y, float width, float height, int[][] levelData) {
 
         return !IsSolid(x, y, levelData) &&
                 !IsSolid(x+width, y, levelData) &&
@@ -22,6 +22,6 @@ public class HelpMethods {
 
         int value = levelData[(int) yIndex][(int) xIndex];
 
-        return (value >= 48 || value < 0 || value != 11);
+        return value >= 48 || value < 0 || value != 11;
     }
 }
