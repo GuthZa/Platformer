@@ -11,13 +11,23 @@ import static utilz.HelpMethods.*;
 
 public class Player extends Entity {
 
+    //Animations && Movement
     private BufferedImage[][] animations;
     private int animationTick, animationIndex, animationSpeed = 20;
     private int playerAction = IDLE;
     private boolean isMoving = false;
     private boolean isAttacking = false;
-    private boolean left, up, right, down;
+    private boolean left, right, jump;
     private float playerSpeed = Game.SCALE;
+
+    //Jumping & Gravity
+    private float airSpeed = 0f;
+    private final float gravity = 0.04f * Game.SCALE;
+    private final float jumpSpeed = -2.25f * Game.SCALE;
+    private final float fallSpeedAfterCollision = 0.5f * Game.SCALE;
+    private boolean inAir = false;
+
+    //Level data and player settings
     private int[][] levelData;
     private final float xDrawOffSet = 21 * Game.SCALE;
     private final float yDrawOffSet = 4 * Game.SCALE;
@@ -47,33 +57,50 @@ public class Player extends Entity {
     //Movement
     public void updatePosition() {
         isMoving = false;
-        if(!left && !right && !up && !down) return;
+        if(jump) jump();
+        if(!left && !right && !inAir) return;
 
-        float xSpeed = 0, ySpeed = 0;
+        float xSpeed = 0;
 
-        if(left && !right) {
-            xSpeed = -playerSpeed;
-        } else if (right && !left) {
-            xSpeed = playerSpeed;
-        }
+        if(left) xSpeed -= playerSpeed;
+        if (right) xSpeed += playerSpeed;
 
-        if(up && !down) {
-            ySpeed = -playerSpeed;
-        } else if(down && !up) {
-            ySpeed = playerSpeed;
-        }
+        if(!inAir && !IsEntityOnFloor(hitBox, levelData)) inAir = true;
 
-//        if(CanMoveHere(x+xSpeed, y+ySpeed, width, height, levelData)) {
-//            this.x += xSpeed;
-//            this.y += ySpeed;
-//            this.isMoving = true;
-//        }
+        if(inAir) {
+            if(CanMoveHere(hitBox.x, hitBox.y + airSpeed, hitBox.width, hitBox.height, levelData)) {
+                hitBox.y += airSpeed;
+                airSpeed += gravity;
+                updateXPos(xSpeed);
+            } else {
+                hitBox.y = GetEntityYPosUnderRoofOrAboveFloor(hitBox, airSpeed);
+                if(airSpeed > 0)
+                    resetInAir();
+                else
+                    airSpeed = fallSpeedAfterCollision;
+                updateXPos(xSpeed);
+            }
+        } else updateXPos(xSpeed);
+        isMoving = true;
+    }
 
-        if(CanMoveHere(hitBox.x + xSpeed, hitBox.y + ySpeed,
+    private void jump() {
+        if (inAir) return;
+        inAir = true;
+        airSpeed = jumpSpeed;
+    }
+
+    private void resetInAir() {
+        inAir = false;
+        airSpeed = 0;
+    }
+
+    private void updateXPos(float xSpeed) {
+        if(CanMoveHere(hitBox.x + xSpeed, hitBox.y,
                 hitBox.width, hitBox.height, levelData)) {
             hitBox.x += xSpeed;
-            hitBox.y += ySpeed;
-            this.isMoving = true;
+        } else {
+            hitBox.x = GetEntityXPosNextToWall(hitBox, xSpeed);
         }
     }
 
@@ -122,45 +149,13 @@ public class Player extends Entity {
     }
     public void resetDirBooleans() {
         left = false;
-        up = false;
         right = false;
-        down = false;
     }
 
 
     //Getters and Setters
-    public void setAttacking(boolean attacking) {
-        isAttacking = attacking;
-    }
-    public boolean isLeft() {
-        return left;
-    }
-
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
-
-    public boolean isUp() {
-        return up;
-    }
-
-    public void setUp(boolean up) {
-        this.up = up;
-    }
-
-    public boolean isRight() {
-        return right;
-    }
-
-    public void setRight(boolean right) {
-        this.right = right;
-    }
-
-    public boolean isDown() {
-        return down;
-    }
-
-    public void setDown(boolean down) {
-        this.down = down;
-    }
+    public void setAttacking(boolean attacking) { isAttacking = attacking; }
+    public void setLeft(boolean left) { this.left = left; }
+    public void setRight(boolean right) { this.right = right; }
+    public void setJump(boolean jump) { this.jump = jump; }
 }
