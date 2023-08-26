@@ -1,23 +1,24 @@
 package game;
 
 import entities.Player;
+import gamestates.GameState;
+import gamestates.Menu;
+import gamestates.Playing;
 import levels.LevelManager;
 
 import java.awt.*;
 
 public class Game implements Runnable {
 
-    private GameWindow gameWindow;
+    private final GameWindow gameWindow;
     private final GamePanel gamePanel;
     private Thread gameThread;
+    private Playing playing;
+    private Menu menu;
 
 
     private final int FPS = 120;
     private final int UPS = 200; //updates per second
-
-    private Player player;
-
-    private LevelManager levelManager;
 
     public final static int TILES_DEFAULT_SIZE = 32;
     public final static float SCALE = 2.0f;
@@ -38,9 +39,8 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        levelManager = new LevelManager(this);
-        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
-        player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
+        playing = new Playing(this);
+        menu = new Menu(this);
     }
 
     private void startGameLoop() {
@@ -49,13 +49,19 @@ public class Game implements Runnable {
     }
 
     public void updateGame() {
-        levelManager.update();
-        player.update();
+        switch (GameState.state) {
+            case MENU -> menu.update();
+            case PLAYING -> playing.update();
+            default -> System.out.println("Error on states");
+        }
     }
 
     public void render(Graphics g) {
-        levelManager.draw(g);
-        player.render(g);
+        switch (GameState.state) {
+            case MENU -> menu.draw(g);
+            case PLAYING -> playing.draw(g);
+            default -> System.out.println("Error on states");
+        }
     }
 
     @Override
@@ -101,11 +107,11 @@ public class Game implements Runnable {
     }
 
     public void windowFocusLost() {
-        player.resetDirBooleans();
+        if(GameState.state == GameState.PLAYING)
+            playing.getPlayer().resetDirBooleans();
     }
 
-    //Getters and Setters
-    public Player getPlayer() {
-        return this.player;
-    }
+    public Playing getPlaying() { return playing; }
+
+    public Menu getMenu() { return menu; }
 }

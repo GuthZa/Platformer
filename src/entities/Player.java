@@ -13,7 +13,8 @@ public class Player extends Entity {
 
     //Animations && Movement
     private BufferedImage[][] animations;
-    private int animationTick, animationIndex, animationSpeed = 20;
+    private int animationTick, animationIndex;
+    private final int animationSpeed = 20;
     private int playerAction = IDLE;
     private boolean isMoving = false;
     private boolean isAttacking = false;
