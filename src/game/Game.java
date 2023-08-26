@@ -8,7 +8,7 @@ import java.awt.*;
 public class Game implements Runnable {
 
     private GameWindow gameWindow;
-    private GamePanel gamePanel;
+    private final GamePanel gamePanel;
     private Thread gameThread;
 
 
@@ -20,7 +20,7 @@ public class Game implements Runnable {
     private LevelManager levelManager;
 
     public final static int TILES_DEFAULT_SIZE = 32;
-    public final static float SCALE = 1.0f;
+    public final static float SCALE = 2.0f;
     public final static int TILES_IN_WIDTH = 26;
     public final static int TILES_IN_HEIGHT = 14;
     public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
@@ -38,8 +38,9 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
         levelManager = new LevelManager(this);
+        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
+        player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
     }
 
     private void startGameLoop() {
@@ -99,11 +100,12 @@ public class Game implements Runnable {
         }
     }
 
-    public Player getPlayer() {
-        return this.player;
-    }
-
     public void windowFocusLost() {
         player.resetDirBooleans();
+    }
+
+    //Getters and Setters
+    public Player getPlayer() {
+        return this.player;
     }
 }
