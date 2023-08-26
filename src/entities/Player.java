@@ -32,7 +32,7 @@ public class Player extends Entity {
     private final float xDrawOffSet = 21 * Game.SCALE;
     private final float yDrawOffSet = 4 * Game.SCALE;
     private static final float PLAYER_HITBOX_WIDTH = 20 * Game.SCALE;
-    private static final float PLAYER_HITBOX_HEIGHT = 28 * Game.SCALE;
+    private static final float PLAYER_HITBOX_HEIGHT = 27 * Game.SCALE;
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
@@ -51,7 +51,7 @@ public class Player extends Entity {
         g.drawImage(animations[playerAction][animationIndex],
                 (int) (hitBox.x - xDrawOffSet), (int) (hitBox.y - yDrawOffSet),
                 width, height,null);
-        drawHitBox(g);
+//        drawHitBox(g);
     }
 
     //Movement
@@ -113,6 +113,9 @@ public class Player extends Entity {
 
         if(isAttacking) playerAction = ATTACK_1;
 
+        if(inAir && airSpeed < 0) playerAction = JUMP;
+        else if(inAir && airSpeed > 0) playerAction = FALLING;
+
         if (startAnimation != playerAction) resetAnimationTicks();
     }
 
@@ -146,6 +149,7 @@ public class Player extends Entity {
     //Data
     public void loadLevelData(int[][] levelData) {
         this.levelData = levelData;
+        if(!IsEntityOnFloor(hitBox, levelData)) inAir = true;
     }
     public void resetDirBooleans() {
         left = false;
