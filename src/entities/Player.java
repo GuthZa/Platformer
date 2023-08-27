@@ -32,8 +32,8 @@ public class Player extends Entity {
     private int[][] levelData;
     private final float xDrawOffSet = 21 * Game.SCALE;
     private final float yDrawOffSet = 4 * Game.SCALE;
-    private static final float PLAYER_HITBOX_WIDTH = 20 * Game.SCALE;
-    private static final float PLAYER_HITBOX_HEIGHT = 27 * Game.SCALE;
+    private static final int PLAYER_HITBOX_WIDTH = (int) (20 * Game.SCALE);
+    private static final int PLAYER_HITBOX_HEIGHT = (int) (27 * Game.SCALE);
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
