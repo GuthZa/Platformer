@@ -52,7 +52,11 @@ public class Game implements Runnable {
         switch (GameState.state) {
             case MENU -> menu.update();
             case PLAYING -> playing.update();
-            default -> System.out.println("Error on states");
+            case OPTIONS, QUIT -> System.exit(0);
+            default -> {
+                System.out.println("Error on states");
+                System.exit(0);
+            }
         }
     }
 
