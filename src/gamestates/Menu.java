@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 public class Menu extends State implements StateMethods {
 
-    private MenuButton[] buttons = new MenuButton[3];
+    private final MenuButton[] buttons = new MenuButton[3];
     private BufferedImage backgroundImage;
     private int menuX, menuY, menuWidth, menuHeight;
 
@@ -66,6 +66,10 @@ public class Menu extends State implements StateMethods {
     @Override
     public void mouseClicked(MouseEvent e) {
 
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
     }
 
     @Override

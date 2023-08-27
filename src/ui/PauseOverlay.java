@@ -47,21 +47,42 @@ public class PauseOverlay {
     }
 
     public void update() {
-
+        musicButton.update();
+        sfxButton.update();
     }
-    public void mouseDragged() {
+
+    private boolean isIn(MouseEvent e, PauseButton button) {
+        return button.getBounds().contains(e.getX(), e.getY());
+    }
+
+    public void mouseDragged(MouseEvent e) {
 
     }
 
     public void mousePressed(MouseEvent e) {
-
+        if(isIn(e, musicButton))
+            musicButton.setMousePressed(true);
+        else if(isIn(e, sfxButton))
+            sfxButton.setMousePressed(true);
     }
 
     public void mouseReleased(MouseEvent e) {
+        if(isIn(e, musicButton) && musicButton.isMousePressed())
+            musicButton.setMuted(musicButton.isMuted());
+        if(isIn(e, sfxButton) && sfxButton.isMousePressed())
+            sfxButton.setMuted(sfxButton.isMuted());
 
+        musicButton.resetBools();
+        sfxButton.resetBools();
     }
 
     public void mouseMoved(MouseEvent e) {
+        musicButton.setMouseOver(false);
+        sfxButton.setMouseOver(false);
 
+        if(isIn(e, musicButton))
+            musicButton.setMouseOver(true);
+        else if(isIn(e, sfxButton))
+            sfxButton.setMouseOver(true);
     }
 }

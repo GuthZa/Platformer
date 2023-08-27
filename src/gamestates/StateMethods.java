@@ -11,6 +11,7 @@ public interface StateMethods {
     void mouseClicked(MouseEvent e);
     void mousePressed(MouseEvent e);
     void mouseReleased(MouseEvent e);
+    void mouseDragged(MouseEvent e);
     void keyPressed(KeyEvent e);
     void keyReleased(KeyEvent e);
 }
