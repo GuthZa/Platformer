@@ -7,12 +7,17 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import static utilz.Constants.UI.PauseButtons.*;
+
 public class PauseOverlay {
 
     private BufferedImage backgroundImage;
+    private SoundButton musicButton, sfxButton;
+
     private int backgroundX, backgroundY, backgroundWidth, backgroundHeight;
     public PauseOverlay() {
         loadBackground();
+        createSoundButtons();
     }
 
     private void loadBackground() {
@@ -23,8 +28,22 @@ public class PauseOverlay {
         backgroundY = (int) (25 * Game.SCALE);
     }
 
+    private void createSoundButtons() {
+        int soundX = (int) (450 * Game.SCALE);
+        int musicY = (int) (140 * Game.SCALE);
+        int sfxY = (int) (186 * Game.SCALE);
+
+        musicButton = new SoundButton(soundX, musicY, SOUND_BUTTON_SIZE, SOUND_BUTTON_SIZE);
+        sfxButton = new SoundButton(soundX, sfxY, SOUND_BUTTON_SIZE, SOUND_BUTTON_SIZE);
+    }
+
     public void draw(Graphics g) {
+        //Background
         g.drawImage(backgroundImage, backgroundX, backgroundY, backgroundWidth, backgroundHeight, null);
+
+        //Sound Buttons
+        musicButton.draw(g);
+        sfxButton.draw(g);
     }
 
     public void update() {

@@ -55,5 +55,9 @@ public class Constants {
             public static final int BUTTON_HEIGHT = (int) (BUTTON_HEIGHT_DEFAULT * Game.SCALE);
         }
 
+        public static class PauseButtons {
+            public static final int SOUND_BUTTON_DEFAULT_SIZE = 42;
+            public static final int SOUND_BUTTON_SIZE = (int) (SOUND_BUTTON_DEFAULT_SIZE * Game.SCALE);
+        }
     }
 }
