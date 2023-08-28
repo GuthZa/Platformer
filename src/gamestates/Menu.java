@@ -9,9 +9,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import static game.Game.*;
+
 public class Menu extends State implements StateMethods {
 
     private final MenuButton[] buttons = new MenuButton[3];
+    private BufferedImage backgroundMenuImage;
     private BufferedImage backgroundImage;
     private int menuX, menuY, menuWidth, menuHeight;
 
@@ -30,24 +33,26 @@ public class Menu extends State implements StateMethods {
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(backgroundImage, menuX, menuY, menuWidth, menuHeight, null);
+        g.drawImage(backgroundImage, 0, 0, GAME_WIDTH, GAME_HEIGHT, null);
+        g.drawImage(backgroundMenuImage, menuX, menuY, menuWidth, menuHeight, null);
 
         for (MenuButton menuButton : buttons)
             menuButton.draw(g);
     }
 
     private void loadButtons() {
-        buttons[0] = new MenuButton(Game.GAME_WIDTH / 2, (int) (150 * Game.SCALE), GameState.PLAYING, 0);
-        buttons[1] = new MenuButton(Game.GAME_WIDTH / 2, (int) (220 * Game.SCALE), GameState.OPTIONS, 1);
-        buttons[2] = new MenuButton(Game.GAME_WIDTH / 2, (int) (290 * Game.SCALE), GameState.QUIT, 2);
+        buttons[0] = new MenuButton(GAME_WIDTH / 2, (int) (150 * SCALE), GameState.PLAYING, 0);
+        buttons[1] = new MenuButton(GAME_WIDTH / 2, (int) (220 * SCALE), GameState.OPTIONS, 1);
+        buttons[2] = new MenuButton(GAME_WIDTH / 2, (int) (290 * SCALE), GameState.QUIT, 2);
     }
 
     private void loadBackground() {
-        backgroundImage = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND);
-        menuWidth = (int) (backgroundImage.getWidth() * Game.SCALE);
-        menuHeight = (int) (backgroundImage.getHeight() * Game.SCALE);
-        menuX = Game.GAME_WIDTH / 2 - menuWidth / 2;
-        menuY = (int) (45 * Game.SCALE);
+        backgroundImage = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND_IMAGE);
+        backgroundMenuImage = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND);
+        menuWidth = (int) (backgroundMenuImage.getWidth() * SCALE);
+        menuHeight = (int) (backgroundMenuImage.getHeight() * SCALE);
+        menuX = GAME_WIDTH / 2 - menuWidth / 2;
+        menuY = (int) (45 * SCALE);
     }
 
     @Override
