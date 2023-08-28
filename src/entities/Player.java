@@ -155,6 +155,7 @@ public class Player extends Entity {
     public void resetDirBooleans() {
         left = false;
         right = false;
+        isMoving = false;
     }
 
 
