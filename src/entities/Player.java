@@ -48,9 +48,9 @@ public class Player extends Entity {
     }
 
     //Draw player
-    public void render(Graphics g) {
+    public void render(Graphics g, int levelOffSet) {
         g.drawImage(animations[playerAction][animationIndex],
-                (int) (hitBox.x - xDrawOffSet), (int) (hitBox.y - yDrawOffSet),
+                (int) (hitBox.x - xDrawOffSet) - levelOffSet, (int) (hitBox.y - yDrawOffSet),
                 width, height,null);
 //        drawHitBox(g);
     }
@@ -59,11 +59,11 @@ public class Player extends Entity {
     public void updatePosition() {
         isMoving = false;
         if(jump) jump();
-        if(!left && !right && !inAir) return;
+        if(((!left && !right) || (left && right)) && !inAir) return;
 
         float xSpeed = 0;
 
-        if(left) xSpeed -= playerSpeed;
+        if (left) xSpeed -= playerSpeed;
         if (right) xSpeed += playerSpeed;
 
         if(!inAir && !IsEntityOnFloor(hitBox, levelData)) inAir = true;
