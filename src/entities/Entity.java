@@ -21,16 +21,11 @@ public abstract class Entity {
         hitBox = new Rectangle2D.Float(x, y, width, height);
     }
 
-    protected void drawHitBox(Graphics g) {
+    protected void drawHitBox(Graphics g, int xLevelOffSet) {
         //For debugging
         g.setColor(Color.PINK);
-        g.drawRect((int) hitBox.x, (int) hitBox.y, (int) hitBox.width, (int) hitBox.height);
+        g.drawRect((int) hitBox.x - xLevelOffSet, (int) hitBox.y, (int) hitBox.width, (int) hitBox.height);
     }
-
-//    protected void updateHitBox() {
-//        hitBox.x = (int) x;
-//        hitBox.y = (int) y;
-//    }
 
     public Rectangle2D.Float getHitBox() {
         return hitBox;

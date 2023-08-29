@@ -23,6 +23,7 @@ public class Playing extends State implements StateMethods {
     private PauseOverlay pauseOverlay;
     private boolean paused;
 
+    //Moving the screen based on player position and borders
     private final int leftBorder = (int) (0.2 * GAME_WIDTH);
     private final int rightBorder = (int) (0.8 * GAME_WIDTH);
     private int xLevelOffSet = 0;
@@ -30,6 +31,7 @@ public class Playing extends State implements StateMethods {
     private final int maxTilesOffSet = levelTilesWide - TILES_IN_WIDTH;
     private final int maxLevelOffSetX = maxTilesOffSet * TILES_SIZE;
 
+    //Environment
     private BufferedImage backgroundImage;
     private BufferedImage bigClouds;
     private BufferedImage smallClouds;

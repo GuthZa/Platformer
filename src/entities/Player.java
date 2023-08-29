@@ -52,7 +52,9 @@ public class Player extends Entity {
         g.drawImage(animations[playerAction][animationIndex],
                 (int) (hitBox.x - xDrawOffSet) - levelOffSet, (int) (hitBox.y - yDrawOffSet),
                 width, height,null);
-//        drawHitBox(g);
+
+        //For Debugging
+//        drawHitBox(g, levelOffSet);
     }
 
     //Movement
