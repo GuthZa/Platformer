@@ -11,6 +11,7 @@ import java.io.IOException;
 public class LoadSave {
 
     public static final String PLAYER_ATLAS = "resources/player_sprites.png";
+    public static final String CRABBY_SPRITE = "resources/crabby_sprite.png";
     public static final String LEVEL_ATLAS = "resources/outside_sprites.png";
 //    public static final String LEVEL_ONE_DATA = "resources/level_one_data.png";
     public static final String LEVEL_ONE_DATA = "resources/level_one_data_long.png";
