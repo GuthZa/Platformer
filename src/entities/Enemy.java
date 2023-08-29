@@ -10,15 +10,15 @@ import static utilz.Constants.Directions.*;
 
 public abstract class Enemy extends Entity {
 
-    private int animationIndex, enemyState, enemyType;
-    private int animationTick;
-    private final int animationSpeed = 25;
-    private boolean firstUpdate = true;
-    private boolean inAir;
-    private float fallSpeed;
-    private final float gravity = 0.04f * Game.SCALE;
-    private float walkSpeed = 0.3f * Game.SCALE;
-    private int walkingDirection = LEFT;
+    protected int animationIndex, enemyState, enemyType;
+    protected int animationTick;
+    protected final int animationSpeed = 25;
+    protected boolean firstUpdate = true;
+    protected boolean inAir;
+    protected float fallSpeed;
+    protected final float gravity = 0.04f * Game.SCALE;
+    protected float walkSpeed = 0.3f * Game.SCALE;
+    protected int walkingDirection = LEFT;
 
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
@@ -26,7 +26,46 @@ public abstract class Enemy extends Entity {
         initHitBox(x, y, width, height);
     }
 
-    private void updateAnimationTick() {
+    protected void newState(int enemyState) {
+        this.enemyState = enemyState;
+        animationTick = 0;
+        animationIndex = 0;
+    }
+
+    protected void firstUpdateCheck(int[][] levelData) {
+        if (IsEntityOnFloor(hitBox, levelData))
+            inAir = true;
+        firstUpdate = false;
+    }
+
+    protected void updateInAir(int[][] levelData) {
+        if (CanMoveHere(hitBox.x, hitBox.y + fallSpeed, hitBox.width, hitBox.height, levelData)) {
+            hitBox.y += fallSpeed;
+            fallSpeed += gravity;
+        } else {
+            inAir = false;
+            hitBox.y = GetEntityYPosUnderRoofOrAboveFloor(hitBox, fallSpeed);
+        }
+    }
+
+    protected void move(int[][] levelData) {
+        float xSpeed;
+
+        if(walkingDirection == LEFT) {
+            xSpeed = -walkSpeed;
+        } else {
+            xSpeed = walkSpeed;
+        }
+
+        if(CanMoveHere(hitBox.x + xSpeed, hitBox.y, hitBox.width, hitBox.height, levelData))
+            if(IsFloor(hitBox, xSpeed, levelData)) {
+                hitBox.x += xSpeed;
+                return;
+            }
+        changeWalkDirection();
+    }
+
+    protected void updateAnimationTick() {
         if(++animationTick >= animationSpeed) {
             animationTick = 0;
             if(++animationIndex >= GetSpriteAmount(enemyType, enemyState))
@@ -34,54 +73,7 @@ public abstract class Enemy extends Entity {
         }
     }
 
-    public void update(int[][] levelData) {
-        updateMove(levelData);
-        updateAnimationTick();
-    }
-
-    public void draw(Graphics g) {
-
-    }
-
-    private void updateMove(int[][] levelData) {
-        if(firstUpdate) {
-            if (IsEntityOnFloor(hitBox, levelData))
-                inAir = true;
-            firstUpdate = false;
-        }
-
-        if(inAir) {
-            if (CanMoveHere(hitBox.x, hitBox.y + fallSpeed, hitBox.width, hitBox.height, levelData)) {
-                hitBox.y += fallSpeed;
-                fallSpeed += gravity;
-            } else {
-                inAir = false;
-                hitBox.y = GetEntityYPosUnderRoofOrAboveFloor(hitBox, fallSpeed);
-            }
-        } else {
-            switch (enemyState) {
-                case IDLE -> enemyState = RUNNING;
-                case RUNNING -> {
-                    float xSpeed;
-
-                    if(walkingDirection == LEFT) {
-                        xSpeed = -walkSpeed;
-                    } else {
-                        xSpeed = walkSpeed;
-                    }
-
-                    if(CanMoveHere(hitBox.x + xSpeed, hitBox.y, hitBox.width, hitBox.height, levelData))
-                        if(IsFloor(hitBox, xSpeed, levelData)) {
-                            hitBox.x += xSpeed;
-                            return;
-                        }
-                    changeWalkDirection();
-                }
-            }
-        }
-    }
-
-    private void changeWalkDirection() {
+    protected void changeWalkDirection() {
         if(walkingDirection == LEFT)
             walkingDirection = RIGHT;
         else
