@@ -29,6 +29,7 @@ public class LoadSave {
     public static final String PLAYING_BACKGROUND_IMAGE = "resources/playing_bg_img.png";
     public static final String PLAYING_SMALL_CLOUDS = "resources/small_clouds.png";
     public static final String PLAYING_BIG_CLOUDS = "resources/big_clouds.png";
+    public static final String STATUS_BAR = "resources/health_power_bar.png";
 
     public static BufferedImage GetSpriteAtlas(String filename) {
         BufferedImage image = null;

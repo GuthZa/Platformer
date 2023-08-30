@@ -35,6 +35,24 @@ public class Player extends Entity {
     private static final int PLAYER_HITBOX_WIDTH = (int) (20 * Game.SCALE);
     private static final int PLAYER_HITBOX_HEIGHT = (int) (27 * Game.SCALE);
 
+    //Status Bar UI
+    private BufferedImage statusBarImage;
+
+    private final int statusBarWidth = (int) (192 * Game.SCALE);
+    private final int statusBarHeight = (int) (58 * Game.SCALE);
+    private final int statusBarX = (int) (10 * Game.SCALE);
+    private final int statusBarY = (int) (10 * Game.SCALE);
+
+    private final int healthBarWidth = (int) (150 * Game.SCALE);
+    private final int healthBarHeight = (int) (4 * Game.SCALE);
+    private final int healthBarX = (int) (34 * Game.SCALE);
+    private final int healthBarY = (int) (14 * Game.SCALE);
+
+    //Player stats
+    private int maxHealth = 100;
+    private int currentHealth = 40;
+    private int healthWidth = healthBarWidth;
+
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
@@ -42,6 +60,8 @@ public class Player extends Entity {
     }
 
     public void update() {
+        updateHealthBar();
+
         updatePosition();
         updateAnimationTick();
         setAnimation();
@@ -53,8 +73,21 @@ public class Player extends Entity {
                 (int) (hitBox.x - xDrawOffSet) - levelOffSet, (int) (hitBox.y - yDrawOffSet),
                 width, height,null);
 
+        drawUI(g);
+
         //For Debugging
 //        drawHitBox(g, levelOffSet);
+    }
+
+    private void drawUI(Graphics g) {
+        g.drawImage(statusBarImage, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
+        g.setColor(Color.RED);
+        g.fillRect(healthBarX + statusBarX, healthBarY + statusBarY, healthWidth, healthBarHeight);
+    }
+
+    //Player Stats
+    private void updateHealthBar() {
+        healthWidth = (int) ((currentHealth / (float)maxHealth) * healthBarWidth);
     }
 
     //Movement
@@ -147,6 +180,8 @@ public class Player extends Entity {
                 animations[j][i] = image.getSubimage(i * 64, j * 40, 64, 40);
             }
         }
+
+        statusBarImage = LoadSave.GetSpriteAtlas(LoadSave.STATUS_BAR);
     }
 
     //Data
