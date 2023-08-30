@@ -30,9 +30,9 @@ public class EnemyManager {
                         CRABBY_WIDTH_DEFAULT, CRABBY_HEIGHT_DEFAULT);
     }
 
-    public void update(int[][] levelData) {
+    public void update(int[][] levelData, Player player) {
         for (Crabby crabby: crabbies)
-            crabby.update(levelData);
+            crabby.update(levelData, player);
     }
 
     public void draw(Graphics g, int xLevelOffSet) {

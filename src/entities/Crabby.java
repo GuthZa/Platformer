@@ -10,12 +10,12 @@ public class Crabby extends Enemy {
         initHitBox(x, y, (int) (22 * Game.SCALE), (int) (19 * Game.SCALE));
     }
 
-    public void update(int[][] levelData) {
-        updateMove(levelData);
+    public void update(int[][] levelData, Player player) {
+        updateMove(levelData, player);
         updateAnimationTick();
     }
 
-    private void updateMove(int[][] levelData) {
+    private void updateMove(int[][] levelData, Player player) {
         if(firstUpdate)
             firstUpdateCheck(levelData);
 
@@ -24,7 +24,14 @@ public class Crabby extends Enemy {
         else {
             switch (enemyState) {
                 case IDLE -> newState(RUNNING);
-                case RUNNING -> move(levelData);
+                case RUNNING -> {
+                    if(canSeePlayer(levelData, player))
+                        turnTowardsPlayer(player);
+                    if(isPlayerCloseForAttack(player))
+                        newState(ATTACK);
+
+                    move(levelData);
+                }
             }
         }
     }
