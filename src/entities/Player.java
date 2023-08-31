@@ -278,9 +278,8 @@ public class Player extends Entity {
         hitBox.x = x;
         hitBox.y = y;
 
-        if (!IsEntityOnFloor(hitBox, levelData))
+        if (IsEntityOnFloor(hitBox, levelData))
             inAir = true;
-
     }
 
 
