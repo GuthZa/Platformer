@@ -57,6 +57,7 @@ public class Playing extends State implements StateMethods {
         enemyManager = new EnemyManager(this);
         player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE), this);
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
+        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
         pauseOverlay = new PauseOverlay(this);
         gameOverOverlay = new GameOverOverlay(this);
         levelCompletedOverlay = new LevelCompletedOverlay(this);
@@ -87,6 +88,7 @@ public class Playing extends State implements StateMethods {
         player.loadLevelData(newLevel.getLevelData());
         maxLevelOffSetX = newLevel.getMaxLevelOffSetX();
         levelCompleted = false;
+        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
     }
 
     @Override

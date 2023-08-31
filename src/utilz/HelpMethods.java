@@ -41,6 +41,18 @@ public class HelpMethods {
         return list;
     }
 
+    public static Point GetPlayerSpawn(BufferedImage image) {
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getGreen();
+                if(value == 100)
+                    return new Point(i * Game.TILES_SIZE, j * Game.TILES_SIZE);
+            }
+        }
+        return new Point(2 * Game.TILES_SIZE, 2 * Game.TILES_SIZE);
+    }
+
     public static boolean CanMoveHere(float x, float y, float width, float height, int[][] levelData) {
 
         return !IsSolid(x, y, levelData) &&

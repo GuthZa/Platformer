@@ -89,6 +89,13 @@ public class Player extends Entity {
         attackHitBox = new Rectangle2D.Float(x, y, (int) (20 * Game.SCALE), (int) (20 * Game.SCALE));
     }
 
+    public void setSpawn(Point spawn) {
+        this.x = spawn.x;
+        this.y = spawn.y;
+        hitBox.x = x;
+        hitBox.y = y;
+    }
+
     public void update() {
         updateHealthBar();
         if(currentHealth <= 0) {

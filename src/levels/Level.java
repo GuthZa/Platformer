@@ -2,6 +2,7 @@ package levels;
 
 import entities.Crabby;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ public class Level {
     private int levelTilesWide;
     private int maxTilesOffSet;
     private int maxLevelOffSetX;
+    private Point playerSpawn;
 
     public Level(BufferedImage image) {
 
@@ -23,6 +25,7 @@ public class Level {
         createLevelData();
         createEnemies();
         calculateLevelOffSets();
+        calculatePlayerSpawn();
     }
 
     private void createLevelData() {
@@ -39,6 +42,10 @@ public class Level {
         maxLevelOffSetX = maxTilesOffSet * TILES_SIZE;
     }
 
+    private void calculatePlayerSpawn() {
+        playerSpawn = GetPlayerSpawn(image);
+    }
+
     public int getSpriteIndex(int x, int y) {
         return levelData[y][x];
     }
@@ -53,5 +60,9 @@ public class Level {
 
     public ArrayList<Crabby> getCrabs() {
         return crabs;
+    }
+
+    public Point getPlayerSpawn() {
+        return playerSpawn;
     }
 }
