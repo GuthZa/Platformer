@@ -69,7 +69,7 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void update() {
-        if(!paused) {
+        if(!paused && !gameOver) {
             levelManager.update();
             player.update();
             enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
@@ -188,7 +188,10 @@ public class Playing extends State implements StateMethods {
     }
 
     public void resetAll() {
-        //TODO: reset all
+        gameOver = false;
+        paused = false;
+        player.resetAll();
+        enemyManager.resetAllEnemies();
     }
 
     public void unpauseGame() { this.paused = false; }

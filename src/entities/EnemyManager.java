@@ -68,4 +68,9 @@ public class EnemyManager {
             }
         }
     }
+
+    public void resetAllEnemies() {
+        for (Crabby crabby : crabbies)
+            crabby.resetEnemy();
+    }
 }

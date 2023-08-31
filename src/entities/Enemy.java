@@ -144,6 +144,16 @@ public abstract class Enemy extends Entity {
             walkingDirection = LEFT;
     }
 
+    public void resetEnemy() {
+        hitBox.x = x;
+        hitBox.y = y;
+        currentHealth = maxHealth;
+        firstUpdate = true;
+        newState(IDLE);
+        active = true;
+        fallSpeed = 0;
+    }
+
     //Getters and Setters
     public int getEnemyState() {
         return enemyState;
