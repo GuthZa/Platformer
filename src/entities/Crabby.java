@@ -11,25 +11,17 @@ import static utilz.Constants.Enemy.*;
 public class Crabby extends Enemy {
 
     //Attack hitBox
-    private Rectangle2D.Float attackHitBox;
     private int attackBoxOffSet;
 
     public Crabby(float x, float y) {
         super(x, y, CRABBY_WIDTH, CRABBY_HEIGHT, CRABBY);
-        initHitBox(x, y, (int) (22 * Game.SCALE), (int) (19 * Game.SCALE));
+        initHitBox(22, 19);
         initAttackHitBox();
     }
 
     private void initAttackHitBox() {
         attackHitBox = new Rectangle2D.Float(x, y, (int) (82 * Game.SCALE), (int) (19 * Game.SCALE));
         attackBoxOffSet = (int) (Game.SCALE * 30);
-    }
-
-    public void drawAttackBox(Graphics g, int xLevelOffSet) {
-        g.setColor(Color.red);
-        g.drawRect((int) attackHitBox.x - xLevelOffSet,
-                (int) attackHitBox.y,
-                (int) attackHitBox.width, (int) attackHitBox.height);
     }
 
     public void update(int[][] levelData, Player player) {
@@ -45,7 +37,7 @@ public class Crabby extends Enemy {
         if(inAir)
             updateInAir(levelData);
         else {
-            switch (enemyState) {
+            switch (state) {
                 case IDLE -> newState(RUNNING);
                 case RUNNING -> {
                     if(canSeePlayer(levelData, player)) {

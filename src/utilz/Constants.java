@@ -4,6 +4,8 @@ import game.Game;
 
 public class Constants {
 
+    public static final float GRAVITY = 0.04f * Game.SCALE;
+    public static final float ANIMATION_SPEED = 25;
     public static class Directions {
         public static final int LEFT = 0;
         public static final int UP = 1;
