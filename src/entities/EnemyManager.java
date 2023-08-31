@@ -46,6 +46,7 @@ public class EnemyManager {
                     (int) crabby.getHitBox().y - CRABBY_DRAW_OFFSET_Y,
                     CRABBY_WIDTH * crabby.flipWidth(), CRABBY_HEIGHT, null);
             crabby.drawHitBox(g, xLevelOffSet);
+            crabby.drawAttackBox(g, xLevelOffSet);
         }
     }
 
