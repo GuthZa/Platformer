@@ -42,9 +42,9 @@ public class EnemyManager {
     private void drawCrabs(Graphics g, int xLevelOffSet) {
         for (Crabby crabby: crabbies) {
             g.drawImage(crabbyArray[crabby.getEnemyState()][crabby.getAnimationIndex()],
-                    (int) crabby.getHitBox().x - xLevelOffSet- CRABBY_DRAW_OFFSET_X,
+                    (int) crabby.getHitBox().x - xLevelOffSet- CRABBY_DRAW_OFFSET_X + crabby.flipX(),
                     (int) crabby.getHitBox().y - CRABBY_DRAW_OFFSET_Y,
-                    CRABBY_WIDTH, CRABBY_HEIGHT, null);
+                    CRABBY_WIDTH * crabby.flipWidth(), CRABBY_HEIGHT, null);
             crabby.drawHitBox(g, xLevelOffSet);
         }
     }

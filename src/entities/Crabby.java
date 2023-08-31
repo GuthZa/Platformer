@@ -2,6 +2,8 @@ package entities;
 
 import game.Game;
 
+import static utilz.Constants.Directions.LEFT;
+import static utilz.Constants.Directions.RIGHT;
 import static utilz.Constants.Enemy.*;
 
 public class Crabby extends Enemy {
@@ -34,5 +36,12 @@ public class Crabby extends Enemy {
                 }
             }
         }
+    }
+    public int flipX() {
+        return (walkingDirection == RIGHT) ? width : 0;
+    }
+
+    public int flipWidth() {
+        return  (walkingDirection == RIGHT) ? -1 : 1;
     }
 }

@@ -21,6 +21,8 @@ public class Player extends Entity {
     private boolean isAttacking = false;
     private boolean left, right, jump;
     private float playerSpeed = Game.SCALE;
+    private int flipX = 0;
+    private int flipWidth = 1;
 
     //Jumping & Gravity
     private float airSpeed = 0f;
@@ -69,7 +71,7 @@ public class Player extends Entity {
 
         BufferedImage image = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
-        animations = new BufferedImage[9][6];
+        animations = new BufferedImage[7][8];
         for(int j = 0; j < animations.length; j++) {
             for (int i = 0; i < animations[j].length; i++) {
                 animations[j][i] = image.getSubimage(i * 64, j * 40, 64, 40);
@@ -95,14 +97,15 @@ public class Player extends Entity {
     //Draw player
     public void render(Graphics g, int levelOffSet) {
         g.drawImage(animations[playerAction][animationIndex],
-                (int) (hitBox.x - xDrawOffSet) - levelOffSet, (int) (hitBox.y - yDrawOffSet),
-                width, height,null);
+                (int) (hitBox.x - xDrawOffSet) - levelOffSet + flipX,
+                (int) (hitBox.y - yDrawOffSet),
+                width * flipWidth, height,null);
 
         drawUI(g);
 
         //For Debugging
 //        drawHitBox(g, levelOffSet);
-        drawAttackHitBox(g, levelOffSet);
+//        drawAttackHitBox(g, levelOffSet);
     }
 
     private void drawUI(Graphics g) {
@@ -139,8 +142,16 @@ public class Player extends Entity {
 
         float xSpeed = 0;
 
-        if (left) xSpeed -= playerSpeed;
-        if (right) xSpeed += playerSpeed;
+        if (left) {
+            xSpeed -= playerSpeed;
+            flipX = width;
+            flipWidth = -1;
+        }
+        if (right) {
+            xSpeed += playerSpeed;
+            flipX = 0;
+            flipWidth = 1;
+        }
 
         if(!inAir && IsEntityOnFloor(hitBox, levelData)) inAir = true;
 
@@ -198,7 +209,7 @@ public class Player extends Entity {
         if(isMoving) playerAction = RUNNING;
         else playerAction = IDLE;
 
-        if(isAttacking) playerAction = ATTACK_1;
+        if(isAttacking) playerAction = ATTACK;
 
         if(inAir && airSpeed < 0) playerAction = JUMP;
         else if(inAir && airSpeed > 0) playerAction = FALLING;
