@@ -7,7 +7,11 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import static utilz.Constants.Enemy.CRABBY;
@@ -17,8 +21,6 @@ public class LoadSave {
     public static final String PLAYER_ATLAS = "resources/player_sprites.png";
     public static final String CRABBY_SPRITE = "resources/crabby_sprite.png";
     public static final String LEVEL_ATLAS = "resources/outside_sprites.png";
-//    public static final String LEVEL_ONE_DATA = "resources/level_one_data.png";
-    public static final String LEVEL_ONE_DATA = "resources/level_one_data_long.png";
     public static final String MENU_BUTTONS = "resources/button_atlas.png";
     public static final String MENU_BACKGROUND = "resources/menu_background.png";
     public static final String MENU_BACKGROUND_IMAGE = "resources/background_menu.png";
@@ -43,34 +45,40 @@ public class LoadSave {
         return image;
     }
 
-    public static int[][] GetLevelData() {
-        BufferedImage image = GetSpriteAtlas(LEVEL_ONE_DATA);
-        int[][] levelData = new int[image.getHeight()][image.getWidth()];
+    public static BufferedImage[] GetAllLevels() {
 
-        for (int j = 0; j < image.getHeight(); j++) {
-            for (int i = 0; i < image.getWidth(); i++) {
-                Color color = new Color(image.getRGB(i, j));
-                int value = color.getRed();
-                if(value >= 48) value = 0;
-                levelData[j][i] = value;
+        String pathName = "resources/levelData";
+
+        File folder = new File(pathName);
+        File[] listOfFiles = folder.listFiles();
+//
+//        for (File listOfFile : listOfFiles) {
+//            if (listOfFile.isFile()) {
+//                System.out.println("File " + listOfFile.getName());
+//            } else if (listOfFile.isDirectory()) {
+//                System.out.println("Directory " + listOfFile.getName());
+//            }
+//        }
+
+        File[] files = folder.listFiles();
+        File[] filesSorted = new File[listOfFiles.length];
+
+        for (int i = 0; i < filesSorted.length; i++)
+            for (int j = 0; j < listOfFiles.length; j++) {
+                if (files[j].getName().equals((i + 1) + ".png"))
+                    filesSorted[i] = files[j];
+
             }
-        }
 
-        return levelData;
-    }
+        BufferedImage[] imgs = new BufferedImage[filesSorted.length];
 
-    public static ArrayList<Crabby> GetCrabs() {
-        BufferedImage image = GetSpriteAtlas(LEVEL_ONE_DATA);
-        ArrayList<Crabby> list = new ArrayList<>();
-
-        for (int j = 0; j < image.getHeight(); j++) {
-            for (int i = 0; i < image.getWidth(); i++) {
-                Color color = new Color(image.getRGB(i, j));
-                int value = color.getGreen();
-                if(value == CRABBY)
-                    list.add(new Crabby(i * Game.TILES_SIZE, j * Game.TILES_SIZE));
+        for (int i = 0; i < imgs.length; i++)
+            try {
+                imgs[i] = ImageIO.read(filesSorted[i]);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }
-        return list;
+
+        return imgs;
     }
 }

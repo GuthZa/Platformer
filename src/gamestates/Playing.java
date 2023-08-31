@@ -3,6 +3,7 @@ package gamestates;
 import entities.EnemyManager;
 import entities.Player;
 import game.Game;
+import levels.Level;
 import levels.LevelManager;
 import ui.GameOverOverlay;
 import ui.LevelCompletedOverlay;
@@ -33,10 +34,8 @@ public class Playing extends State implements StateMethods {
     //Moving the screen based on player position and borders
     private final int leftBorder = (int) (0.2 * GAME_WIDTH);
     private final int rightBorder = (int) (0.8 * GAME_WIDTH);
-    private int xLevelOffSet = 0;
-    private final int levelTilesWide = LoadSave.GetLevelData()[0].length;
-    private final int maxTilesOffSet = levelTilesWide - TILES_IN_WIDTH;
-    private final int maxLevelOffSetX = maxTilesOffSet * TILES_SIZE;
+    private int xLevelOffSet;
+    private int maxLevelOffSetX;
 
     //Environment
     private BufferedImage backgroundImage;
@@ -49,6 +48,8 @@ public class Playing extends State implements StateMethods {
         super(game);
         initClasses();
         initEnvironment();
+        calculateLevelOffSet();
+        loadStartLevel();
     }
 
     private void initClasses() {
@@ -69,6 +70,23 @@ public class Playing extends State implements StateMethods {
         for (int i = 0; i < smallCloudsPos.length; i++) {
             smallCloudsPos[i] = (int) (90 * SCALE) + random.nextInt((int) (120 * SCALE));
         }
+    }
+
+    private void calculateLevelOffSet() {
+        maxLevelOffSetX = levelManager.getCurrentLevel().getMaxLevelOffSetX();
+    }
+
+    private void loadStartLevel() {
+        enemyManager.loadEnemies(levelManager.getCurrentLevel());
+    }
+
+    public void loadNextLevel() {
+        resetAll();
+        Level newLevel = levelManager.loadNextLevel();
+        enemyManager.loadEnemies(newLevel);
+        player.loadLevelData(newLevel.getLevelData());
+        maxLevelOffSetX = newLevel.getMaxLevelOffSetX();
+        levelCompleted = false;
     }
 
     @Override
@@ -219,7 +237,19 @@ public class Playing extends State implements StateMethods {
         enemyManager.resetAllEnemies();
     }
 
+    public void setLevelCompleted(boolean levelCompleted) {
+        this.levelCompleted = levelCompleted;
+    }
+
     public void unpauseGame() { this.paused = false; }
 
     public Player getPlayer() { return player; }
+
+    public EnemyManager getEnemyManager() {
+        return enemyManager;
+    }
+
+    public void setMaxLevelOffSetX(int maxLevelOffSetX) {
+        this.maxLevelOffSetX = maxLevelOffSetX;
+    }
 }

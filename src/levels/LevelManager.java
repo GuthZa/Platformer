@@ -1,10 +1,13 @@
 package levels;
 
 import game.Game;
+import gamestates.GameState;
 import utilz.LoadSave;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static game.Game.TILES_SIZE;
 
@@ -13,12 +16,22 @@ public class LevelManager {
     private Game game;
     private BufferedImage[] levelSprite;
 
-    private Level levelOne;
+    private ArrayList<Level> levels;
+    private int levelIndex = 0;
 
     public LevelManager(Game game) {
         this.game = game;
         importOutsideSprites();
-        levelOne = new Level(LoadSave.GetLevelData());
+        levels = new ArrayList<>();
+        buildAllLevels();
+    }
+
+    private void buildAllLevels() {
+        BufferedImage[] allLevels = LoadSave.GetAllLevels();
+        Arrays.stream(allLevels).toList().forEach(image -> levels.add(new Level(image)));
+
+//        for(BufferedImage img : allLevels)
+//            levels.add(new Level(img));
     }
 
     private void importOutsideSprites() {
@@ -35,8 +48,8 @@ public class LevelManager {
 
     public void draw(Graphics g, int levelOffSet) {
         for (int j = 0; j < Game.TILES_IN_HEIGHT; j++) {
-            for (int i = 0; i < levelOne.getLevelData()[0].length ; i++) {
-                int index = levelOne.getSpriteIndex(i, j);
+            for (int i = 0; i < levels.get(levelIndex).getLevelData()[0].length ; i++) {
+                int index = levels.get(levelIndex).getSpriteIndex(i, j);
                 g.drawImage(levelSprite[index],TILES_SIZE * i - levelOffSet, j * TILES_SIZE,
                         TILES_SIZE, TILES_SIZE,null);
             }
@@ -47,8 +60,23 @@ public class LevelManager {
 
     }
 
+    public Level loadNextLevel() {
+        levelIndex++;
+        if(levelIndex >= levels.size()) {
+            levelIndex = 0;
+            System.out.println("No more levels! Game Completed!");
+            GameState.state = GameState.MENU;
+        }
+
+        return levels.get(levelIndex);
+    }
+
     //Getters and Setters
     public Level getCurrentLevel() {
-        return levelOne;
+        return levels.get(levelIndex);
+    }
+
+    public int getAmountOfLevels() {
+        return levels.size();
     }
 }
