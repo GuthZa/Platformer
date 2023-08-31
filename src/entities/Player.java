@@ -1,6 +1,7 @@
 package entities;
 
 import game.Game;
+import gamestates.Playing;
 import utilz.LoadSave;
 
 import java.awt.*;
@@ -11,6 +12,7 @@ import static utilz.Constants.PlayerConstants.*;
 import static utilz.HelpMethods.*;
 
 public class Player extends Entity {
+    private Playing playing;
 
     //Animations && Movement
     private BufferedImage[][] animations;
@@ -53,14 +55,16 @@ public class Player extends Entity {
 
     //Player stats
     private int maxHealth = 100;
-    private int currentHealth = 40;
+    private int currentHealth = maxHealth;
     private int healthWidth = healthBarWidth;
 
     //Attack hitBox
     private Rectangle2D.Float attackHitBox;
+    private boolean attackChecked;
 
-    public Player(float x, float y, int width, int height) {
+    public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
+        this.playing = playing;
         loadAnimations();
         initHitBox(x, y, PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT);
         initAttackHitBox();
@@ -86,10 +90,17 @@ public class Player extends Entity {
     }
 
     public void update() {
+        if(currentHealth <= 0) {
+            playing.setGameOver(true);
+            return;
+        }
+
         updateHealthBar();
         updateAttackHitBox();
 
         updatePosition();
+        if(isAttacking)
+            checkAttack();
         updateAnimationTick();
         setAnimation();
     }
@@ -132,6 +143,13 @@ public class Player extends Entity {
             attackHitBox.x = hitBox.x - hitBox.width - (int) (Game.SCALE * 10);
         }
         attackHitBox.y = hitBox.y + (Game.SCALE * 10);
+    }
+
+    private void checkAttack() {
+        if(attackChecked || animationIndex != 1)
+            return;
+        attackChecked = true;
+        playing.checkEnemyHit(attackHitBox);
     }
 
     //Movement
@@ -209,7 +227,14 @@ public class Player extends Entity {
         if(isMoving) playerAction = RUNNING;
         else playerAction = IDLE;
 
-        if(isAttacking) playerAction = ATTACK;
+        if(isAttacking && !inAir) {
+            playerAction = ATTACK;
+            if(startAnimation!=ATTACK) {
+                animationIndex = 0;
+                animationTick = 1;
+                return;
+            }
+        }
 
         if(inAir && airSpeed < 0) playerAction = JUMP;
         else if(inAir && airSpeed > 0) playerAction = FALLING;
@@ -223,6 +248,7 @@ public class Player extends Entity {
             if(++animationIndex >= GetSpriteAmount(playerAction)) {
                 animationIndex = 0;
                 isAttacking = false;
+                attackChecked = false;
             }
         }
     }

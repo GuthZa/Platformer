@@ -4,12 +4,14 @@ import entities.EnemyManager;
 import entities.Player;
 import game.Game;
 import levels.LevelManager;
+import ui.GameOverOverlay;
 import ui.PauseOverlay;
 import utilz.LoadSave;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
@@ -21,7 +23,9 @@ public class Playing extends State implements StateMethods {
     private LevelManager levelManager;
     private EnemyManager enemyManager;
     private PauseOverlay pauseOverlay;
+    private GameOverOverlay gameOverOverlay;
     private boolean paused;
+    private boolean gameOver;
 
     //Moving the screen based on player position and borders
     private final int leftBorder = (int) (0.2 * GAME_WIDTH);
@@ -47,9 +51,10 @@ public class Playing extends State implements StateMethods {
     private void initClasses() {
         levelManager = new LevelManager(game);
         enemyManager = new EnemyManager(this);
-        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
+        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE), this);
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
         pauseOverlay = new PauseOverlay(this);
+        gameOverOverlay = new GameOverOverlay(this);
     }
 
     private void initEnvironment() {
@@ -102,6 +107,8 @@ public class Playing extends State implements StateMethods {
             g.setColor(new Color(0,0,0,150));
             g.fillRect(0,0,GAME_WIDTH, GAME_HEIGHT);
             pauseOverlay.draw(g);
+        } else if(gameOver) {
+            gameOverOverlay.draw(g);
         }
     }
 
@@ -115,6 +122,16 @@ public class Playing extends State implements StateMethods {
         }
     }
 
+    //checks
+    public void checkEnemyHit(Rectangle2D.Float attackHitBox) {
+        enemyManager.checkEnemyHit(attackHitBox);
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    //Key presses
     @Override
     public void mouseMoved(MouseEvent e) {
         if (paused)
@@ -129,9 +146,9 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            player.setAttacking(true);
-        }
+        if(!gameOver)
+            if (e.getButton() == MouseEvent.BUTTON1)
+                player.setAttacking(true);
     }
 
     @Override
@@ -142,28 +159,36 @@ public class Playing extends State implements StateMethods {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(paused)
+        if (paused)
             pauseOverlay.mouseReleased(e);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A -> player.setLeft(true);
-            case KeyEvent.VK_D -> player.setRight(true);
-            case KeyEvent.VK_SPACE -> player.setJump(true);
-            case KeyEvent.VK_BACK_SPACE -> GameState.state = GameState.MENU;
-            case KeyEvent.VK_ESCAPE -> paused = !paused;
-        }
+        if (gameOver)
+            gameOverOverlay.keyPressed(e);
+        else
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_A -> player.setLeft(true);
+                case KeyEvent.VK_D -> player.setRight(true);
+                case KeyEvent.VK_SPACE -> player.setJump(true);
+                case KeyEvent.VK_BACK_SPACE -> GameState.state = GameState.MENU;
+                case KeyEvent.VK_ESCAPE -> paused = !paused;
+            }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A -> player.setLeft(false);
-            case KeyEvent.VK_D -> player.setRight(false);
-            case KeyEvent.VK_SPACE -> player.setJump(false);
-        }
+        if (!gameOver)
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_A -> player.setLeft(false);
+                case KeyEvent.VK_D -> player.setRight(false);
+                case KeyEvent.VK_SPACE -> player.setJump(false);
+            }
+    }
+
+    public void resetAll() {
+        //TODO: reset all
     }
 
     public void unpauseGame() { this.paused = false; }

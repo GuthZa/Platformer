@@ -4,6 +4,7 @@ import gamestates.Playing;
 import utilz.LoadSave;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -30,9 +31,15 @@ public class EnemyManager {
                         CRABBY_WIDTH_DEFAULT, CRABBY_HEIGHT_DEFAULT);
     }
 
+    private void addEnemies() {
+        crabbies = LoadSave.GetCrabs();
+        System.out.println("Crab size: " + crabbies.size());
+    }
+
     public void update(int[][] levelData, Player player) {
         for (Crabby crabby: crabbies)
-            crabby.update(levelData, player);
+            if(crabby.isActive())
+                crabby.update(levelData, player);
     }
 
     public void draw(Graphics g, int xLevelOffSet) {
@@ -41,17 +48,24 @@ public class EnemyManager {
 
     private void drawCrabs(Graphics g, int xLevelOffSet) {
         for (Crabby crabby: crabbies) {
-            g.drawImage(crabbyArray[crabby.getEnemyState()][crabby.getAnimationIndex()],
+            if (crabby.isActive())
+                g.drawImage(crabbyArray[crabby.getEnemyState()][crabby.getAnimationIndex()],
                     (int) crabby.getHitBox().x - xLevelOffSet- CRABBY_DRAW_OFFSET_X + crabby.flipX(),
                     (int) crabby.getHitBox().y - CRABBY_DRAW_OFFSET_Y,
                     CRABBY_WIDTH * crabby.flipWidth(), CRABBY_HEIGHT, null);
-            crabby.drawHitBox(g, xLevelOffSet);
-            crabby.drawAttackBox(g, xLevelOffSet);
+
+            //For debugging
+//            crabby.drawHitBox(g, xLevelOffSet);
+//            crabby.drawAttackBox(g, xLevelOffSet);
         }
     }
 
-    private void addEnemies() {
-        crabbies = LoadSave.GetCrabs();
-        System.out.println("Crab size: " + crabbies.size());
+    public void checkEnemyHit(Rectangle2D.Float attackHitBox) {
+        for (Crabby crabby : crabbies) {
+            if(crabby.isActive() && attackHitBox.intersects(crabby.getHitBox())) {
+                crabby.hit(10);
+                return;
+            }
+        }
     }
 }

@@ -1,6 +1,9 @@
 package entities;
 
 import game.Game;
+import utilz.LoadSave;
+
+import java.awt.geom.Rectangle2D;
 
 import static utilz.Constants.Enemy.*;
 import static utilz.HelpMethods.*;
@@ -19,11 +22,21 @@ public abstract class Enemy extends Entity {
     protected int walkingDirection = LEFT;
     protected int tileY;
     protected float attackDistance = Game.TILES_SIZE;
+    protected boolean active = true;
+    protected boolean attackChecked;
+
+    //Enemy stats
+    protected int maxHealth;
+    protected int currentHealth;
+    protected int damage;
 
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
         this.enemyType = enemyType;
         initHitBox(x, y, width, height);
+        maxHealth = GetMaxHealth(enemyType);
+        currentHealth = maxHealth;
+        damage = GetEnemyDamage(enemyType);
     }
 
     //Animation
@@ -32,8 +45,10 @@ public abstract class Enemy extends Entity {
             animationTick = 0;
             if(++animationIndex >= GetSpriteAmount(enemyType, enemyState)) {
                 animationIndex = 0;
-                if (enemyState == ATTACK)
-                    enemyState = IDLE;
+                switch (enemyState) {
+                    case ATTACK, HIT -> enemyState = IDLE;
+                    case DEAD -> active = false;
+                }
             }
         }
     }
@@ -70,6 +85,12 @@ public abstract class Enemy extends Entity {
         return absValue <= attackDistance;
     }
 
+    protected void checkEnemyHit(Player player, Rectangle2D.Float attackHitBox) {
+        if(attackHitBox.intersects(player.getHitBox()))
+            player.changeHealth(-GetEnemyDamage(enemyType));
+        attackChecked = true;
+    }
+
     //Updates
     protected void updateInAir(int[][] levelData) {
         if (CanMoveHere(hitBox.x, hitBox.y + fallSpeed, hitBox.width, hitBox.height, levelData)) {
@@ -80,6 +101,15 @@ public abstract class Enemy extends Entity {
             hitBox.y = GetEntityYPosUnderRoofOrAboveFloor(hitBox, fallSpeed);
             tileY = (int) hitBox.y / Game.TILES_SIZE;
         }
+    }
+
+    //Combat
+    public void hit(int amount) {
+        currentHealth -= amount;
+        if(currentHealth <= 0)
+            newState(DEAD);
+        else
+            newState(HIT);
     }
 
     //Movement
@@ -121,5 +151,9 @@ public abstract class Enemy extends Entity {
 
     public int getAnimationIndex() {
         return animationIndex;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }
