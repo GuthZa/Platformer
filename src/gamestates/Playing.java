@@ -5,6 +5,7 @@ import entities.Player;
 import game.Game;
 import levels.Level;
 import levels.LevelManager;
+import objects.ObjectManager;
 import ui.GameOverOverlay;
 import ui.LevelCompletedOverlay;
 import ui.PauseOverlay;
@@ -24,6 +25,7 @@ public class Playing extends State implements StateMethods {
     private Player player;
     private LevelManager levelManager;
     private EnemyManager enemyManager;
+    private ObjectManager objectManager;
     private PauseOverlay pauseOverlay;
     private GameOverOverlay gameOverOverlay;
     private LevelCompletedOverlay levelCompletedOverlay;
@@ -55,6 +57,7 @@ public class Playing extends State implements StateMethods {
     private void initClasses() {
         levelManager = new LevelManager(game);
         enemyManager = new EnemyManager(this);
+        objectManager = new ObjectManager(this);
         player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE), this);
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
         player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
@@ -103,6 +106,7 @@ public class Playing extends State implements StateMethods {
         }
         if(!gameOver) {
             levelManager.update();
+            objectManager.update();
             player.update();
             enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
             checkCloseToBorder();
@@ -133,6 +137,7 @@ public class Playing extends State implements StateMethods {
         levelManager.draw(g, xLevelOffSet);
         player.render(g, xLevelOffSet);
         enemyManager.draw(g, xLevelOffSet);
+        objectManager.draw(g, xLevelOffSet);
 
         if(paused) {
             g.setColor(new Color(0,0,0,150));
@@ -250,6 +255,7 @@ public class Playing extends State implements StateMethods {
     public EnemyManager getEnemyManager() {
         return enemyManager;
     }
+    public ObjectManager getObjectManager() { return objectManager; }
 
     public void setMaxLevelOffSetX(int maxLevelOffSetX) {
         this.maxLevelOffSetX = maxLevelOffSetX;
