@@ -14,6 +14,7 @@ public class GameObject {
     protected boolean doAnimation, active = true;
     protected int animationTick, animationIndex;
     protected int xDrawOffSet, yDrawOffSet;
+    protected boolean attacked;
 
     public GameObject(int x, int y, int objectType) {
         this.x = x;
@@ -50,6 +51,7 @@ public class GameObject {
         animationTick = 0;
         active = true;
         doAnimation = !(objectType == BARREL || objectType == BOX);
+        attacked = false;
     }
 
     //Getters and Setter
@@ -69,9 +71,11 @@ public class GameObject {
         this.active = active;
     }
 
-    public void setDoAnimation(boolean doAnimation) {
-        this.doAnimation = doAnimation;
-    }
+    public void setDoAnimation(boolean doAnimation) {this.doAnimation = doAnimation; }
+
+    public boolean isAttacked() { return attacked; }
+
+    public void setAttacked(boolean attacked) { this.attacked = attacked; }
 
     public int getXDrawOffSet() {
         return xDrawOffSet;
@@ -84,4 +88,5 @@ public class GameObject {
     public int getAnimationIndex() {
         return animationIndex;
     }
+
 }

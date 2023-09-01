@@ -67,8 +67,11 @@ public class ObjectManager {
                 container.setDoAnimation(true);
                 int type = 0;
                 if (container.getObjectType() == BARREL) type = 1;
-                potions.add(new Potion((int) (container.getHitBox().x + container.getHitBox().width / 2),
-                        (int) (container.getHitBox().y + container.getHitBox().height / 4), type));
+                if(!container.isAttacked()) {
+                    potions.add(new Potion((int) (container.getHitBox().x + container.getHitBox().width / 2),
+                            (int) (container.getHitBox().y - container.getHitBox().height / 2), type));
+                    container.setAttacked(true);
+                }
             }
         });
     }
