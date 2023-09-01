@@ -36,7 +36,7 @@ public abstract class Entity {
     }
 
     protected void initHitBox(int width, int height) {
-        hitBox = new Rectangle2D.Float(x, y, (int) (width* Game.SCALE) , (int) (height * Game.SCALE));
+        hitBox = new Rectangle2D.Float(x, y, (int) (width * Game.SCALE) , (int) (height * Game.SCALE));
     }
 
     protected void drawHitBox(Graphics g, int xLevelOffSet) {

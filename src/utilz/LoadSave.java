@@ -17,22 +17,32 @@ import java.util.ArrayList;
 import static utilz.Constants.Enemy.CRABBY;
 
 public class LoadSave {
-
+    public static final String LEVEL_ATLAS = "resources/outside_sprites.png";
+    //ENTITY SPECIFICS
     public static final String PLAYER_ATLAS = "resources/player_sprites.png";
     public static final String CRABBY_SPRITE = "resources/crabby_sprite.png";
-    public static final String LEVEL_ATLAS = "resources/outside_sprites.png";
+    public static final String STATUS_BAR = "resources/health_power_bar.png";
+
+    //MENU
     public static final String MENU_BUTTONS = "resources/button_atlas.png";
     public static final String MENU_BACKGROUND = "resources/menu_background.png";
     public static final String MENU_BACKGROUND_IMAGE = "resources/background_menu.png";
+
+    //BUTTONS (PAUSE, SOUND, REPLAY, MUTE)
     public static final String PAUSE_BACKGROUND = "resources/pause_menu.png";
     public static final String SOUND_BUTTONS = "resources/sound_buttons.png";
     public static final String URM_BUTTONS = "resources/urm_buttons.png";
     public static final String VOLUME_BUTTONS = "resources/volume_buttons.png";
     public static final String PLAYING_BACKGROUND_IMAGE = "resources/playing_bg_img.png";
+
+    //PLAYING BACKGROUND
     public static final String PLAYING_SMALL_CLOUDS = "resources/small_clouds.png";
     public static final String PLAYING_BIG_CLOUDS = "resources/big_clouds.png";
-    public static final String STATUS_BAR = "resources/health_power_bar.png";
     public static final String LEVEL_COMPLETED = "resources/level_completed.png";
+
+    //OBJECTS
+    public static final String POTION_ATLAS = "resources/potions_sprites.png";
+    public static final String CONTAINER_ATLAS = "resources/objects_sprites.png";
 
     public static BufferedImage GetSpriteAtlas(String filename) {
         BufferedImage image = null;
