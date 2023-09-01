@@ -1,6 +1,7 @@
 package objects;
 
 import gamestates.Playing;
+import levels.Level;
 import utilz.LoadSave;
 
 import java.awt.*;
@@ -12,21 +13,13 @@ import static utilz.Constants.ObjectConstants.*;
 public class ObjectManager {
     private final Playing playing;
     private BufferedImage[][] potionImages, containerImages;
-    private final ArrayList<Potion> potions;
-    private final ArrayList<GameContainer> containers;
+    private ArrayList<Potion> potions;
+    private ArrayList<GameContainer> containers;
 
     public ObjectManager(Playing playing) {
         this.playing = playing;
 
-        potions = new ArrayList<>();
-        containers = new ArrayList<>();
-
         loadImages();
-
-        potions.add(new Potion(300, 300, RED_POTION));
-        potions.add(new Potion(400, 300, BLUE_POTION));
-        containers.add(new GameContainer(500, 300, BARREL));
-        containers.add(new GameContainer(600, 300, BOX));
     }
 
     private void loadImages() {
@@ -43,6 +36,11 @@ public class ObjectManager {
         for (int j = 0; j < containerImages.length; j++)
             for (int i = 0; i < containerImages[0].length; i++)
                 containerImages[j][i] = containerSprites.getSubimage(40 * i, 30 * j, 40, 30);
+    }
+
+    public void loadObjects(Level newLevel) {
+        potions = newLevel.getPotions();
+        containers = newLevel.getContainers();
     }
 
     public void update() {

@@ -2,6 +2,8 @@ package utilz;
 
 import entities.Crabby;
 import game.Game;
+import objects.GameContainer;
+import objects.Potion;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -9,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static utilz.Constants.Enemy.CRABBY;
+import static utilz.Constants.ObjectConstants.*;
 
 public class HelpMethods {
 
@@ -36,6 +39,35 @@ public class HelpMethods {
                 int value = color.getGreen();
                 if(value == CRABBY)
                     list.add(new Crabby(i * Game.TILES_SIZE, j * Game.TILES_SIZE));
+            }
+        }
+        return list;
+    }
+
+    public static ArrayList<Potion> GetPotions(BufferedImage image) {
+        ArrayList<Potion> list = new ArrayList<>();
+
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getBlue();
+                if(value == RED_POTION || value == BLUE_POTION)
+                    list.add(new Potion(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+            }
+        }
+        return list;
+    }
+
+    public static ArrayList<GameContainer> GetContainers(BufferedImage image) {
+        ArrayList<GameContainer> list = new ArrayList<>();
+
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                Color color = new Color(image.getRGB(i, j));
+                int value = color.getBlue();
+                System.out.println(color.getBlue());
+                if(value == BOX || value == BARREL)
+                    list.add(new GameContainer(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
             }
         }
         return list;

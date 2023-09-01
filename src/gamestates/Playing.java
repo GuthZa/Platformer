@@ -82,6 +82,7 @@ public class Playing extends State implements StateMethods {
 
     private void loadStartLevel() {
         enemyManager.loadEnemies(levelManager.getCurrentLevel());
+        objectManager.loadObjects(levelManager.getCurrentLevel());
     }
 
     public void loadNextLevel() {
@@ -90,6 +91,7 @@ public class Playing extends State implements StateMethods {
         enemyManager.loadEnemies(newLevel);
         player.loadLevelData(newLevel.getLevelData());
         maxLevelOffSetX = newLevel.getMaxLevelOffSetX();
+        objectManager.loadObjects(newLevel);
         levelCompleted = false;
         player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
     }
