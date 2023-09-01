@@ -18,6 +18,7 @@ public abstract class Enemy extends Entity {
     protected float attackDistance = Game.TILES_SIZE;
     protected boolean active = true;
     protected boolean attackChecked;
+    protected boolean dying;
 
     //Enemy stats
     protected int damage;
@@ -99,10 +100,13 @@ public abstract class Enemy extends Entity {
     //Combat
     public void hit(int amount) {
         currentHealth -= amount;
-        if(currentHealth <= 0)
-            newState(DEAD);
-        else
-            newState(HIT);
+        if(!dying) {
+            if (currentHealth <= 0)
+                newState(DEAD);
+            else
+                newState(HIT);
+            dying = true;
+        }
     }
 
     //Movement
@@ -145,6 +149,7 @@ public abstract class Enemy extends Entity {
         newState(IDLE);
         active = true;
         airSpeed = 0;
+        dying = false;
     }
 
     //Getters and Setters
