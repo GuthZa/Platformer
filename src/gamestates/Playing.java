@@ -176,6 +176,14 @@ public class Playing extends State implements StateMethods {
         this.gameOver = gameOver;
     }
 
+    public void checkPotionTouched(Rectangle2D.Float hitBox) {
+        objectManager.checkObjectTouched(hitBox);
+    }
+
+    public void checkObjectHit(Rectangle2D.Float attackHitBox) {
+        objectManager.checkObjectHit(attackHitBox);
+    }
+
     //Key presses
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -244,6 +252,7 @@ public class Playing extends State implements StateMethods {
         paused = false;
         player.resetAll();
         enemyManager.resetAllEnemies();
+        objectManager.resetAllObjects();
     }
 
     public void setLevelCompleted(boolean levelCompleted) {

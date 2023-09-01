@@ -56,7 +56,7 @@ public class Player extends Entity {
         this.playing = playing;
         this.state = IDLE;
         this.maxHealth = 100;
-        this.currentHealth = maxHealth;
+        this.currentHealth = 35;
         this.walkSpeed = Game.SCALE;
         loadAnimations();
         initHitBox(PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT);
@@ -98,6 +98,8 @@ public class Player extends Entity {
         updateAttackHitBox();
 
         updatePosition();
+        if(isMoving)
+            checkPotionTouched();
         if(isAttacking)
             checkAttack();
         updateAnimationTick();
@@ -124,9 +126,24 @@ public class Player extends Entity {
         g.fillRect(healthBarX + statusBarX, healthBarY + statusBarY, healthWidth, healthBarHeight);
     }
 
+    //Checks
+    private void checkPotionTouched() {
+        playing.checkPotionTouched(hitBox);
+    }
+
     //Player Stats
-    private void updateHealthBar() {
-        healthWidth = (int) ((currentHealth / (float)maxHealth) * healthBarWidth);
+    public void changeHealth(int healthToChange) {
+        currentHealth += healthToChange;
+
+        if (currentHealth <= 0) {
+            currentHealth = 0;
+            //gameOver()
+        } else if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+    }
+
+    public void changePower(int powerToChange) {
+        System.out.println("Added power: " + powerToChange + "!");
     }
 
     //Combat
@@ -144,6 +161,7 @@ public class Player extends Entity {
             return;
         attackChecked = true;
         playing.checkEnemyHit(attackHitBox);
+        playing.checkObjectHit(attackHitBox);
     }
 
     //Movement
@@ -204,17 +222,10 @@ public class Player extends Entity {
         }
     }
 
-    public void changeHealth(int healthToChange) {
-        currentHealth += healthToChange;
-
-        if (currentHealth <= 0) {
-            currentHealth = 0;
-            //gameOver()
-        } else if (currentHealth > maxHealth)
-            currentHealth = maxHealth;
-    }
-
     //Animations and Images
+    private void updateHealthBar() {
+        healthWidth = (int) ((currentHealth / (float)maxHealth) * healthBarWidth);
+    }
     private void setAnimation() {
         int startAnimation = state;
 

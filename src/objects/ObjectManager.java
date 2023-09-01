@@ -5,6 +5,7 @@ import levels.Level;
 import utilz.LoadSave;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -43,15 +44,45 @@ public class ObjectManager {
         containers = newLevel.getContainers();
     }
 
+    public void checkObjectTouched(Rectangle2D.Float hitBox) {
+        potions.stream().filter(Potion::isActive).forEach(potion -> {
+            if (potion.getHitBox().intersects(hitBox)) {
+                potion.setActive(false);
+                applyEffectToPlayer(potion);
+            }
+        });
+
+    }
+
+    public void applyEffectToPlayer(Potion potion) {
+        if (potion.getObjectType() == RED_POTION)
+            playing.getPlayer().changeHealth(RED_POTION_VALUE);
+        else
+            playing.getPlayer().changePower(BLUE_POTION_VALUE);
+    }
+
+    public void checkObjectHit(Rectangle2D.Float hitBox) {
+        containers.stream().filter(GameContainer::isActive).forEach(container -> {
+            if(container.getHitBox().intersects(hitBox)) {
+                container.setDoAnimation(true);
+                int type = 0;
+                if (container.getObjectType() == BARREL) type = 1;
+                potions.add(new Potion((int) (container.getHitBox().x + container.getHitBox().width / 2),
+                        (int) (container.getHitBox().y + container.getHitBox().height / 4), type));
+            }
+        });
+    }
+
     public void update() {
         potions.stream().filter(Potion::isActive).forEach(Potion::update);
-//        containers.stream().filter(GameContainer::isActive).forEach(GameContainer::update);
+        containers.stream().filter(GameContainer::isActive).forEach(GameContainer::update);
     }
 
     public void draw(Graphics g, int xLevelOffset) {
         drawPotions(g, xLevelOffset);
         drawContainers(g, xLevelOffset);
 
+        //Debugging
 //        potions.forEach(potion -> potion.drawHitBox(g, xLevelOffset));
 //        containers.forEach(container -> container.drawHitBox(g, xLevelOffset));
     }
@@ -76,5 +107,10 @@ public class ObjectManager {
                     (int)(container.getHitBox().y - container.getYDrawOffSet()),
                     CONTAINER_WIDTH, CONTAINER_HEIGHT, null);
         });
+    }
+
+    public void resetAllObjects() {
+        potions.forEach(Potion::reset);
+        containers.forEach(GameContainer::reset);
     }
 }

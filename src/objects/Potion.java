@@ -10,6 +10,7 @@ public class Potion extends GameObject {
         initHitBox(7, 14);
         xDrawOffSet = (int) (3 * Game.SCALE);
         yDrawOffSet = (int) (2 * Game.SCALE);
+
     }
 
     public void update() {

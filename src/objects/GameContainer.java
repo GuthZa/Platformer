@@ -22,11 +22,9 @@ public class GameContainer extends GameObject {
             yDrawOffSet = (int) (5 * Game.SCALE);
         }
 
-        hitBox.x += xDrawOffSet + (int) (Game.SCALE * 2);
-        hitBox.y += yDrawOffSet / 2f;
+        hitBox.y += yDrawOffSet + (int) (Game.SCALE * 2);
+        hitBox.x += xDrawOffSet / 2f;
     }
 
-    public void update() {
-        updateAnimationTick();
-    }
+    public void update() { if(doAnimation) updateAnimationTick(); }
 }

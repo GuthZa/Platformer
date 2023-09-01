@@ -65,7 +65,6 @@ public class HelpMethods {
             for (int i = 0; i < image.getWidth(); i++) {
                 Color color = new Color(image.getRGB(i, j));
                 int value = color.getBlue();
-                System.out.println(color.getBlue());
                 if(value == BOX || value == BARREL)
                     list.add(new GameContainer(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
             }

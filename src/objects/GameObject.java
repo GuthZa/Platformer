@@ -69,6 +69,10 @@ public class GameObject {
         this.active = active;
     }
 
+    public void setDoAnimation(boolean doAnimation) {
+        this.doAnimation = doAnimation;
+    }
+
     public int getXDrawOffSet() {
         return xDrawOffSet;
     }
