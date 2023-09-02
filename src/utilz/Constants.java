@@ -91,7 +91,14 @@ public class Constants {
             }
             return 0;
         }
+    }
 
+    public static class Projectiles {
+        public static final int CANNON_BALL_DEFAULT_WIDTH = 15;
+        public static final int CANNON_BALL_DEFAULT_HEIGHT = 15;
+        public static final int CANNON_BALL_WIDTH = (int) (Game.SCALE * CANNON_BALL_DEFAULT_WIDTH);
+        public static final int CANNON_BALL_HEIGHT = (int) (Game.SCALE * CANNON_BALL_DEFAULT_HEIGHT);
+        public static final float SPEED = 0.5f * Game.SCALE;
     }
 
     public static class Enemy {

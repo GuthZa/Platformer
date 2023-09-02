@@ -1,20 +1,9 @@
 package utilz;
 
-import entities.Crabby;
-import game.Game;
-
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-
-import static utilz.Constants.Enemy.CRABBY;
 
 public class LoadSave {
     public static final String LEVEL_ATLAS = "resources/outside_sprites.png";
@@ -45,6 +34,7 @@ public class LoadSave {
     public static final String CONTAINER_ATLAS = "resources/objects_sprites.png";
     public static final String TRAP_ATLAS = "resources/trap_atlas.png";
     public static final String CANNON_ATLAS = "resources/cannon_atlas.png";
+    public static final String PROJECTILE_ATLAS = "resources/ball.png";
 
     public static BufferedImage GetSpriteAtlas(String filename) {
         BufferedImage image = null;
@@ -82,15 +72,15 @@ public class LoadSave {
 
             }
 
-        BufferedImage[] imgs = new BufferedImage[filesSorted.length];
+        BufferedImage[] img = new BufferedImage[filesSorted.length];
 
-        for (int i = 0; i < imgs.length; i++)
+        for (int i = 0; i < img.length; i++)
             try {
-                imgs[i] = ImageIO.read(filesSorted[i]);
+                img[i] = ImageIO.read(filesSorted[i]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-        return imgs;
+        return img;
     }
 }
