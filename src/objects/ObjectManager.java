@@ -1,6 +1,7 @@
 package objects;
 
 import entities.Player;
+import game.Game;
 import gamestates.Playing;
 import levels.Level;
 import utilz.LoadSave;
@@ -11,6 +12,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static utilz.Constants.ObjectConstants.*;
+import static utilz.HelpMethods.CanCannonSeePlayer;
+import static utilz.HelpMethods.IsSightClear;
 
 public class ObjectManager {
     private final Playing playing;
@@ -100,19 +103,43 @@ public class ObjectManager {
                 });
     }
 
-    public void update() {
+    private boolean isPlayerInFrontOfCannon(Cannon cannon, Player player) {
+        if (cannon.getObjectType() == CANNON_LEFT) {
+            return (cannon.getHitBox().x > player.getHitBox().x);
+        } else if (cannon.getObjectType() == CANNON_RIGHT) {
+            return (cannon.getHitBox().x > cannon.getHitBox().x);
+        }
+        return false;
+    }
+
+    private boolean isPlayerInRange(Cannon cannon, Player player) {
+        int absValue = (int) Math.abs(player.getHitBox().x - cannon.getHitBox().x);
+        return absValue <= Game.TILES_SIZE * 5;
+    }
+
+    public void update(int[][] levelData, Player player) {
         potions.stream().
                 filter(Potion::isActive).
                 forEach(Potion::update);
         containers.stream().
                 filter(GameContainer::isActive).
                 forEach(GameContainer::update);
-        updateCannons();
+        updateCannons(levelData, player);
     }
 
-    private void updateCannons() {
+    private void updateCannons(int[][] levelData, Player player) {
+        cannons.stream().
+                filter(cannon ->
+                        !cannon.isDoingAnimation() &&
+                        cannon.getTileY() == player.getTileY() &&
+                        isPlayerInRange(cannon, player) &&
+                        isPlayerInFrontOfCannon(cannon, player) &&
+                        CanCannonSeePlayer(levelData, player.getHitBox(), cannon.getHitBox(), cannon.getTileY())).
+                forEach(this::shootCannon);
+
         cannons.forEach(Cannon::update);
     }
+    private void shootCannon(Cannon cannon) { cannon.setDoAnimation(true); }
 
     public void draw(Graphics g, int xLevelOffset) {
         drawPotions(g, xLevelOffset);

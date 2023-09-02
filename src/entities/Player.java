@@ -26,6 +26,7 @@ public class Player extends Entity {
     //Jumping & Gravity
     private final float jumpSpeed = -2.25f * Game.SCALE;
     private final float fallSpeedAfterCollision = 0.5f * Game.SCALE;
+    private int tileY = 0;
 
 
     //Level data and player settings
@@ -101,6 +102,7 @@ public class Player extends Entity {
         if(isMoving) {
             checkPotionTouched();
             checkSpikesTouched();
+            tileY = (int) hitBox.y / Game.TILES_SIZE;
         }
         if(isAttacking)
             checkAttack();
@@ -303,4 +305,5 @@ public class Player extends Entity {
     public void setLeft(boolean left) { this.left = left; }
     public void setRight(boolean right) { this.right = right; }
     public void setJump(boolean jump) { this.jump = jump; }
+    public int getTileY() { return tileY; }
 }

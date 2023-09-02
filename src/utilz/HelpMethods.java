@@ -177,12 +177,10 @@ public class HelpMethods {
     }
 
     public static boolean IsAllTilesWalkable(int xStart, int xEnd, int y, int[][] levelData) {
-        for (int i = 0; i < xEnd - xStart; i++) {
-            if (IsTileSolid(xStart + i, y, levelData))
-                return false;
-            if (!IsTileSolid(xStart + i, y + 1, levelData))
-                return false;
-        }
+        if (IsAllTilesClear(xStart, xEnd, y, levelData))
+            for (int i = 0; i < xEnd - xStart; i++)
+                 if (!IsTileSolid(xStart + i, y + 1, levelData))
+                     return false;
         return true;
     }
 
@@ -194,5 +192,22 @@ public class HelpMethods {
             return IsAllTilesWalkable(secondXTile, firstXTile, tileY, levelData);
         else
             return IsAllTilesWalkable(firstXTile, secondXTile, tileY, levelData);
+    }
+
+    public static boolean CanCannonSeePlayer(int[][] levelData, Rectangle2D.Float firstHitBox, Rectangle2D.Float secondHitBox, int tileY) {
+        int firstXTile = (int) (firstHitBox.x / Game.TILES_SIZE);
+        int secondXTile = (int) (secondHitBox.x / Game.TILES_SIZE);
+
+        if (firstXTile > secondXTile)
+            return IsAllTilesClear(secondXTile, firstXTile, tileY, levelData);
+        else
+            return IsAllTilesClear(firstXTile, secondXTile, tileY, levelData);
+    }
+
+    public static boolean IsAllTilesClear(int xStart, int xEnd, int y, int[][] levelData) {
+        for (int i = 0; i < xEnd - xStart; i++)
+            if (IsTileSolid(xStart + i, y, levelData))
+                return false;
+        return true;
     }
 }
