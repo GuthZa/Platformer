@@ -159,7 +159,15 @@ public class ObjectManager {
     private void updateProjectiles(int[][] levelData, Player player) {
         cannonBalls.stream().
                 filter(CannonBall::isActive).
-                forEach(CannonBall::updatePosition);
+                forEach(cannonBall -> {
+                    cannonBall.updatePosition();
+                    if (cannonBall.getHitBox().intersects(player.getHitBox())) {
+                        player.changeHealth(-25);
+                        cannonBall.setActive(false);
+                    } else if (IsProjectileHittingLevel(cannonBall, levelData)) {
+                        cannonBall.setActive(false);
+                    }
+                });
     }
 
     public void draw(Graphics g, int xLevelOffset) {
