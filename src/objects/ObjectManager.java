@@ -12,15 +12,17 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static utilz.Constants.ObjectConstants.*;
+import static utilz.Constants.Projectiles.*;
 import static utilz.HelpMethods.*;
 
 public class ObjectManager {
     private final Playing playing;
     private BufferedImage[][] potionImages, containerImages;
     private BufferedImage[] cannonImages;
-    private BufferedImage spikeImages;
+    private BufferedImage spikeImages, cannonBallImage;
     private ArrayList<Potion> potions;
     private ArrayList<GameContainer> containers;
+    private ArrayList<CannonBall> cannonBalls = new ArrayList<>();
     private ArrayList<Spike> spikes;
     private ArrayList<Cannon> cannons;
 
@@ -52,6 +54,8 @@ public class ObjectManager {
         for (int i = 0; i < cannonImages.length; i++) {
             cannonImages[i] = cannonSprites.getSubimage(i * 40, 0, 40, 26);
         }
+
+        cannonBallImage = LoadSave.GetSpriteAtlas(LoadSave.PROJECTILE_ATLAS);
     }
 
     public void loadObjects(Level newLevel) {
@@ -59,6 +63,7 @@ public class ObjectManager {
         containers = new ArrayList<>(newLevel.getContainers());
         spikes = new ArrayList<>(newLevel.getSpikes());
         cannons = new ArrayList<>(newLevel.getCannons());
+        cannonBalls.clear();
     }
 
     public void checkObjectTouched(Rectangle2D.Float hitBox) {
@@ -125,6 +130,7 @@ public class ObjectManager {
                 filter(GameContainer::isActive).
                 forEach(GameContainer::update);
         updateCannons(levelData, player);
+        updateProjectiles(levelData, player);
     }
 
     private void updateCannons(int[][] levelData, Player player) {
@@ -139,13 +145,25 @@ public class ObjectManager {
 
         cannons.forEach(Cannon::update);
     }
-    private void shootCannon(Cannon cannon) { cannon.setDoAnimation(true); }
+    private void shootCannon(Cannon cannon) {
+        cannon.setDoAnimation(true);
+
+        int direction = cannon.getObjectType() == CANNON_LEFT ? -1 : 1;
+        cannonBalls.add(new CannonBall((int) cannon.getHitBox().x, (int) cannon.getHitBox().y, direction));
+    }
+
+    private void updateProjectiles(int[][] levelData, Player player) {
+        cannonBalls.stream().
+                filter(CannonBall::isActive).
+                forEach(CannonBall::updatePosition);
+    }
 
     public void draw(Graphics g, int xLevelOffset) {
         drawPotions(g, xLevelOffset);
         drawContainers(g, xLevelOffset);
         drawSpikes(g, xLevelOffset);
         drawCannons(g, xLevelOffset);
+        drawProjectiles(g, xLevelOffset);
 
         //Debugging
 //        potions.forEach(potion -> potion.drawHitBox(g, xLevelOffset));
@@ -201,6 +219,17 @@ public class ObjectManager {
             g.drawImage(cannonImages[cannon.getAnimationIndex()],
                     x, (int) (cannon.getHitBox().y), width, CANNON_HEIGHT, null);
         }
+    }
+
+    public void drawProjectiles(Graphics g, int xLevelOffSet) {
+        cannonBalls.stream().
+                filter(CannonBall::isActive).
+                forEach(cannonBall -> g.drawImage(
+                        cannonBallImage,
+                        (int) (cannonBall.getHitBox().x - xLevelOffSet),
+                        (int) (cannonBall.getHitBox().y),
+                        CANNON_BALL_WIDTH, CANNON_BALL_HEIGHT, null)
+                );
     }
 
 
