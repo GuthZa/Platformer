@@ -1,5 +1,7 @@
 package objects;
 
+import game.Game;
+
 import java.awt.geom.Rectangle2D;
 
 import static utilz.Constants.Projectiles.*;
@@ -10,8 +12,16 @@ public class CannonBall {
     private boolean active = true;
 
     public CannonBall(int x, int y, int direction) {
-        hitBox = new Rectangle2D.Float(x, y, CANNON_BALL_WIDTH, CANNON_BALL_HEIGHT);
+        int xOffSet = (int) (-3 * Game.SCALE);
+        int yOffSet = (int) (5 * Game.SCALE);
+
+        if(direction == 1)
+            xOffSet = (int) (29 * Game.SCALE);
+
+        hitBox = new Rectangle2D.Float(x + xOffSet, y + yOffSet, CANNON_BALL_WIDTH, CANNON_BALL_HEIGHT);
         this.direction = direction;
+
+
     }
 
     public void updatePosition() {
