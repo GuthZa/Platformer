@@ -12,8 +12,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static utilz.Constants.ObjectConstants.*;
-import static utilz.HelpMethods.CanCannonSeePlayer;
-import static utilz.HelpMethods.IsSightClear;
+import static utilz.HelpMethods.*;
 
 public class ObjectManager {
     private final Playing playing;
@@ -106,8 +105,9 @@ public class ObjectManager {
     private boolean isPlayerInFrontOfCannon(Cannon cannon, Player player) {
         if (cannon.getObjectType() == CANNON_LEFT) {
             return (cannon.getHitBox().x > player.getHitBox().x);
-        } else if (cannon.getObjectType() == CANNON_RIGHT) {
-            return (cannon.getHitBox().x > cannon.getHitBox().x);
+        }
+        if (cannon.getObjectType() == CANNON_RIGHT) {
+            return (cannon.getHitBox().x < player.getHitBox().x);
         }
         return false;
     }

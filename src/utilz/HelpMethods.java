@@ -95,8 +95,9 @@ public class HelpMethods {
             for (int i = 0; i < image.getWidth(); i++) {
                 Color color = new Color(image.getRGB(i, j));
                 int value = color.getBlue();
-                if(value == CANNON_LEFT || value == CANNON_RIGHT)
+                if(value == CANNON_LEFT || value == CANNON_RIGHT) {
                     list.add(new Cannon(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+                }
             }
         }
         return list;
