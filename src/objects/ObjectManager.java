@@ -15,10 +15,12 @@ import static utilz.Constants.ObjectConstants.*;
 public class ObjectManager {
     private final Playing playing;
     private BufferedImage[][] potionImages, containerImages;
+    private BufferedImage[] cannonImages;
     private BufferedImage spikeImages;
     private ArrayList<Potion> potions;
     private ArrayList<GameContainer> containers;
     private ArrayList<Spike> spikes;
+    private ArrayList<Cannon> cannons;
 
     public ObjectManager(Playing playing) {
         this.playing = playing;
@@ -42,12 +44,19 @@ public class ObjectManager {
                 containerImages[j][i] = containerSprites.getSubimage(40 * i, 30 * j, 40, 30);
 
         spikeImages = LoadSave.GetSpriteAtlas(LoadSave.TRAP_ATLAS);
+
+        BufferedImage cannonSprites = LoadSave.GetSpriteAtlas(LoadSave.CANNON_ATLAS);
+        cannonImages = new BufferedImage[7];
+        for (int i = 0; i < cannonImages.length; i++) {
+            cannonImages[i] = cannonSprites.getSubimage(i * 40, 0, 40, 26);
+        }
     }
 
     public void loadObjects(Level newLevel) {
         potions = new ArrayList<>(newLevel.getPotions());
         containers = new ArrayList<>(newLevel.getContainers());
         spikes = new ArrayList<>(newLevel.getSpikes());
+        cannons = new ArrayList<>(newLevel.getCannons());
     }
 
     public void checkObjectTouched(Rectangle2D.Float hitBox) {
@@ -98,12 +107,18 @@ public class ObjectManager {
         containers.stream().
                 filter(GameContainer::isActive).
                 forEach(GameContainer::update);
+        updateCannons();
+    }
+
+    private void updateCannons() {
+        cannons.forEach(Cannon::update);
     }
 
     public void draw(Graphics g, int xLevelOffset) {
         drawPotions(g, xLevelOffset);
         drawContainers(g, xLevelOffset);
         drawSpikes(g, xLevelOffset);
+        drawCannons(g, xLevelOffset);
 
         //Debugging
 //        potions.forEach(potion -> potion.drawHitBox(g, xLevelOffset));
@@ -147,10 +162,26 @@ public class ObjectManager {
                 );
     }
 
+    public void drawCannons(Graphics g, int xLevelOffSet) {
+        for (Cannon cannon :
+                cannons) {
+            int x = (int) (cannon.getHitBox().x - xLevelOffSet);
+            int width = CANNON_WIDTH;
+            if (cannon.getObjectType() == CANNON_RIGHT) {
+                x += width;
+                width += -1;
+            }
+            g.drawImage(cannonImages[cannon.getAnimationIndex()],
+                    x, (int) (cannon.getHitBox().y), width, CANNON_HEIGHT, null);
+        }
+    }
+
+
     public void resetAllObjects() {
         loadObjects(playing.getLevelManager().getCurrentLevel());
 
         potions.forEach(Potion::reset);
         containers.forEach(GameContainer::reset);
+        cannons.forEach(Cannon::reset);
     }
 }

@@ -40,6 +40,8 @@ public class GameObject {
                 if(objectType == BARREL || objectType == BOX) {
                     doAnimation = false;
                     active = false;
+                } else if (objectType == CANNON_LEFT || objectType == CANNON_RIGHT) {
+                    doAnimation = false;
                 }
             }
         }
@@ -49,7 +51,12 @@ public class GameObject {
         animationIndex = 0;
         animationTick = 0;
         active = true;
-        doAnimation = !(objectType == BARREL || objectType == BOX);
+        doAnimation = !(
+                objectType == BARREL ||
+                objectType == BOX ||
+                objectType == CANNON_LEFT ||
+                objectType == CANNON_RIGHT
+        );
     }
 
     //Getters and Setter

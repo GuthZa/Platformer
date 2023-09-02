@@ -1,6 +1,7 @@
 package levels;
 
 import entities.Crabby;
+import objects.Cannon;
 import objects.GameContainer;
 import objects.Potion;
 import objects.Spike;
@@ -20,6 +21,7 @@ public class Level {
     private ArrayList<Potion> potions;
     private ArrayList<Spike> spikes;
     private ArrayList<GameContainer> containers;
+    private ArrayList<Cannon> cannons;
     private int levelTilesWide;
     private int maxTilesOffSet;
     private int maxLevelOffSetX;
@@ -33,6 +35,7 @@ public class Level {
         createContainers();
         createSpikes();
         createEnemies();
+        createCannons();
         calculateLevelOffSets();
         calculatePlayerSpawn();
     }
@@ -47,6 +50,7 @@ public class Level {
     private void createEnemies() {
         crabs = GetCrabs(image);
     }
+    private void createCannons() { cannons = GetCannons(image); }
 
     private void calculateLevelOffSets() {
         levelTilesWide = image.getWidth();
@@ -77,6 +81,8 @@ public class Level {
     public ArrayList<Potion> getPotions() { return potions; }
 
     public ArrayList<Spike> getSpikes() { return spikes; }
+
+    public ArrayList<Cannon> getCannons() { return cannons; }
 
     public ArrayList<GameContainer> getContainers() { return containers; }
 
