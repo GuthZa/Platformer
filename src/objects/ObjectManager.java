@@ -134,20 +134,24 @@ public class ObjectManager {
     }
 
     private void updateCannons(int[][] levelData, Player player) {
-        cannons.stream().
-                filter(cannon ->
-                        !cannon.isDoingAnimation() &&
-                        cannon.getTileY() == player.getTileY() &&
-                        isPlayerInRange(cannon, player) &&
-                        isPlayerInFrontOfCannon(cannon, player) &&
-                        CanCannonSeePlayer(levelData, player.getHitBox(), cannon.getHitBox(), cannon.getTileY())).
-                forEach(this::shootCannon);
 
-        cannons.forEach(Cannon::update);
+        for (Cannon cannon : cannons) {
+            if (!cannon.isDoingAnimation() &&
+                    cannon.getTileY() == player.getTileY() &&
+                    isPlayerInRange(cannon, player) &&
+                    isPlayerInFrontOfCannon(cannon, player) &&
+                    CanCannonSeePlayer(levelData, player.getHitBox(), cannon.getHitBox(), cannon.getTileY())
+            )
+                cannon.setDoAnimation(true);
+
+            cannon.update();
+
+            if(cannon.getAnimationIndex() == 4 && cannon.getAnimationTick() == 0) {
+                shootCannon(cannon);
+            }
+        }
     }
     private void shootCannon(Cannon cannon) {
-        cannon.setDoAnimation(true);
-
         int direction = cannon.getObjectType() == CANNON_LEFT ? -1 : 1;
         cannonBalls.add(new CannonBall((int) cannon.getHitBox().x, (int) cannon.getHitBox().y, direction));
     }
