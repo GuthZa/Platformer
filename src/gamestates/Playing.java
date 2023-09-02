@@ -184,6 +184,10 @@ public class Playing extends State implements StateMethods {
         objectManager.checkObjectHit(attackHitBox);
     }
 
+    public void checkSpikesTouched(Player player) {
+        objectManager.checkSpikeTouched(player);
+    }
+
     //Key presses
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -267,6 +271,8 @@ public class Playing extends State implements StateMethods {
         return enemyManager;
     }
     public ObjectManager getObjectManager() { return objectManager; }
+
+    public LevelManager getLevelManager() { return levelManager; }
 
     public void setMaxLevelOffSetX(int maxLevelOffSetX) {
         this.maxLevelOffSetX = maxLevelOffSetX;

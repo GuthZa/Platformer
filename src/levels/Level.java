@@ -3,6 +3,7 @@ package levels;
 import entities.Crabby;
 import objects.GameContainer;
 import objects.Potion;
+import objects.Spike;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ public class Level {
     private int[][] levelData;
     private ArrayList<Crabby> crabs;
     private ArrayList<Potion> potions;
+    private ArrayList<Spike> spikes;
     private ArrayList<GameContainer> containers;
     private int levelTilesWide;
     private int maxTilesOffSet;
@@ -29,6 +31,7 @@ public class Level {
         createLevelData();
         createPotions();
         createContainers();
+        createSpikes();
         createEnemies();
         calculateLevelOffSets();
         calculatePlayerSpawn();
@@ -40,7 +43,7 @@ public class Level {
 
     private void createPotions() { potions = GetPotions(image); }
     private void createContainers() { containers = GetContainers(image); }
-
+    private void createSpikes() { spikes = GetSpikes(image); }
     private void createEnemies() {
         crabs = GetCrabs(image);
     }
@@ -72,6 +75,8 @@ public class Level {
     }
 
     public ArrayList<Potion> getPotions() { return potions; }
+
+    public ArrayList<Spike> getSpikes() { return spikes; }
 
     public ArrayList<GameContainer> getContainers() { return containers; }
 

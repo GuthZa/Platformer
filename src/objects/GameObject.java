@@ -14,7 +14,6 @@ public class GameObject {
     protected boolean doAnimation, active = true;
     protected int animationTick, animationIndex;
     protected int xDrawOffSet, yDrawOffSet;
-    protected boolean attacked;
 
     public GameObject(int x, int y, int objectType) {
         this.x = x;
@@ -26,7 +25,7 @@ public class GameObject {
         hitBox = new Rectangle2D.Float(x, y, (int) (width * Game.SCALE) , (int) (height * Game.SCALE));
     }
 
-    public void drawHitBox(Graphics g, int xLevelOffSet) {
+    public void  drawHitBox(Graphics g, int xLevelOffSet) {
         //For debugging
         g.setColor(Color.PINK);
         g.drawRect((int) hitBox.x - xLevelOffSet, (int) hitBox.y, (int) hitBox.width, (int) hitBox.height);
@@ -51,7 +50,6 @@ public class GameObject {
         animationTick = 0;
         active = true;
         doAnimation = !(objectType == BARREL || objectType == BOX);
-        attacked = false;
     }
 
     //Getters and Setter
@@ -70,13 +68,8 @@ public class GameObject {
     public void setActive(boolean active) {
         this.active = active;
     }
-
+    public boolean isDoingAnimation() { return doAnimation; }
     public void setDoAnimation(boolean doAnimation) {this.doAnimation = doAnimation; }
-
-    public boolean isAttacked() { return attacked; }
-
-    public void setAttacked(boolean attacked) { this.attacked = attacked; }
-
     public int getXDrawOffSet() {
         return xDrawOffSet;
     }

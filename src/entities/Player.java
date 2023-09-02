@@ -98,8 +98,10 @@ public class Player extends Entity {
         updateAttackHitBox();
 
         updatePosition();
-        if(isMoving)
+        if(isMoving) {
             checkPotionTouched();
+            checkSpikesTouched();
+        }
         if(isAttacking)
             checkAttack();
         updateAnimationTick();
@@ -130,8 +132,15 @@ public class Player extends Entity {
     private void checkPotionTouched() {
         playing.checkPotionTouched(hitBox);
     }
+    private void checkSpikesTouched() {
+        playing.checkSpikesTouched(this);
+    }
 
     //Player Stats
+    public void kill() {
+        currentHealth = 0;
+    }
+
     public void changeHealth(int healthToChange) {
         currentHealth += healthToChange;
 
