@@ -169,7 +169,7 @@ public class ObjectManager {
             int width = CANNON_WIDTH;
             if (cannon.getObjectType() == CANNON_RIGHT) {
                 x += width;
-                width += -1;
+                width *= -1;
             }
             g.drawImage(cannonImages[cannon.getAnimationIndex()],
                     x, (int) (cannon.getHitBox().y), width, CANNON_HEIGHT, null);
